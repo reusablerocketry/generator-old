@@ -1,0 +1,80 @@
+
+@import 'outline';
+@import 'values';
+
+#header {
+  background-color: $header-background-color;
+  height: $header-height;
+  width: 100%;
+  
+  @include outline-bottom();
+
+  position: fixed;
+  top: 0;
+  z-index: 100;
+
+  > .content {
+    max-width: $page-max-width;
+    margin: 0 auto;
+
+    > .logo.link {
+      background-color: $theme-color;
+      height: $header-logo-height;
+      display: inline-block;
+      float: left;
+
+      img {
+        height: $header-logo-height;
+      }
+      
+    }
+
+    > nav {
+      display: inline-block;
+      float: left;
+      
+      height: $header-height;
+
+      margin: 0 $header-horizontal-spacing;
+
+      a {
+        font-weight: bold;
+        font-size: $header-font-size;
+        text-transform: uppercase;
+        
+        color: rgba($header-foreground-color, 0.5);
+        line-height: $header-height;
+        display: block;
+      }
+
+      ul {
+
+        li {
+          margin: 0 $header-nav-horizontal-spacing;
+
+          height: $header-height;
+          
+          display: inline-block;
+          
+        }
+
+      }
+
+    }
+    
+    .about {
+      font-weight: bold;
+      font-size: $header-font-size;
+      text-transform: uppercase;
+
+      margin-right: $header-nav-horizontal-spacing;
+      
+      color: rgba($header-foreground-color, 0.5);
+      line-height: $header-height;
+      display: inline-block;
+      float: right;
+    }
+    
+  }
+  
+}

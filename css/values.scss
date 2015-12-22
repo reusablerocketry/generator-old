@@ -1,0 +1,92 @@
+
+$dark: false;
+
+$unit: 8px;
+
+$background-color: #eee;
+
+$theme-color: #07f;
+$theme-color-foreground: white;
+
+$arbitrary-width: 5000px;
+
+// page
+
+$page-max-width: 960px;
+$page-background-color: white;
+$page-foreground-color: #444;
+
+@if $dark {
+  $background-color: #444;
+
+  $page-background-color: #555;
+  $page-foreground-color: #aaa;
+}
+
+/* header */
+
+$header-background-color: $page-background-color;
+$header-foreground-color: $page-foreground-color;
+$header-font-size: $unit * 2;
+
+$header-height: 60px;
+$header-logo-height: 64px;
+$header-horizontal-spacing: $unit * 3;
+$header-nav-horizontal-spacing: $unit * 2;
+
+/* body */
+
+$body-background-color: $page-background-color;
+
+$body-vertical-padding: $unit * 2;
+$body-horizontal-padding: $unit * 2;
+
+$body-inline-article-title-color: rgba($page-foreground-color, 0.7);
+$body-inline-article-title-size: $unit * 3;
+
+$body-inline-article-author-color: $page-foreground-color;
+$body-inline-article-author-size: $unit * 2;
+$body-inline-article-author-margin: $unit * 2;
+
+$body-inline-article-blurb-margin-top: $unit;
+$body-inline-article-blurb-max-height: 4em;
+$body-inline-article-blurb-fade-height: 1.5em;
+
+@if $dark {
+  $body-inline-article-title-color: $page-foreground-color;
+}
+
+/* border */
+
+$border-width: 1px;
+$border-color: rgba(black, 0.15);
+$border-color-bottom: rgba(black, 0.2);
+$border-radius: 3px;
+
+@if $dark {
+  $border-color: rgba(black, 0.3);
+  $border-color-bottom: rgba(black, 0.4);
+}
+
+/* article */
+
+$article-category-font-size: $unit * 1.5;
+$article-category-foreground-color: mix($page-foreground-color, $background-color, 50%);
+$article-category-padding: $unit * 2;
+
+$article-header-vertical-padding: $unit * 4;
+$article-header-hero-height: 480px;
+$article-header-hero-padding: $unit * 2;
+$article-header-hero-fade-height: 240px;
+
+$article-title-color: rgba($page-foreground-color, 0.9);
+$article-title-size: $unit * 4;
+
+$article-author-color: $page-foreground-color;
+$article-author-size: $unit * 3;
+
+$article-blurb-margin-top: $unit;
+$article-blurb-max-height: 4em;
+$article-blurb-fade-height: 1.5em;
+
+$article-text-vertical-padding: $unit * 4;

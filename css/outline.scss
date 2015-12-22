@@ -1,0 +1,13 @@
+
+@import 'values';
+
+@mixin outline() {
+  border: $border-width solid $border-color;
+  border-bottom-color: $border-color-bottom;
+  border-radius: $border-radius;
+}
+
+@mixin outline-bottom() {
+  border-bottom: $border-width solid $border-color-bottom;
+}
+

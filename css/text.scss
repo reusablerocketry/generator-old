@@ -1,4 +1,39 @@
 
+@import 'values';
+
 .text {
+
+  line-height: 150%;
   
+  h1 {
+    font-size: $text-h1-font-size;
+    color: $text-h1-foreground-color;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: $unit * 2;
+    margin-bottom: $unit * 3;
+  }
+
+  * + h1 {
+    margin-top: $unit * 8;
+  }
+
+  ol, ul {
+    margin: $unit * 3 $unit * 1;
+    margin-left: $unit * 5;
+  }
+
+  p + p {
+    text-indent: 2em;
+    margin-top: $unit;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
 }

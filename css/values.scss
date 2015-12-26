@@ -16,11 +16,15 @@ $page-max-width: 960px;
 $page-background-color: white;
 $page-foreground-color: #444;
 
+$medium: "(max-width: 1200px)";
+$small: "(max-width: 1024px)";
+$tiny: "(max-width: 600px)";
+
 @if $dark {
   $background-color: #444;
 
   $page-background-color: #555;
-  $page-foreground-color: #aaa;
+  $page-foreground-color: #ccc;
 }
 
 /* header */
@@ -30,6 +34,7 @@ $header-foreground-color: $page-foreground-color;
 $header-font-size: $unit * 2;
 
 $header-height: 60px;
+$header-logo-width: 180px;
 $header-logo-height: 64px;
 $header-horizontal-spacing: $unit * 3;
 $header-nav-horizontal-spacing: $unit * 2;
@@ -39,21 +44,21 @@ $header-nav-horizontal-spacing: $unit * 2;
 $body-background-color: $page-background-color;
 
 $body-vertical-padding: $unit * 2;
-$body-horizontal-padding: $unit * 2;
+$body-horizontal-padding: $unit * 4;
 
-$body-inline-article-title-color: rgba($page-foreground-color, 0.7);
-$body-inline-article-title-size: $unit * 3;
+$body-inline-post-title-color: rgba($page-foreground-color, 0.7);
+$body-inline-post-title-size: $unit * 2.5;
 
-$body-inline-article-author-color: $page-foreground-color;
-$body-inline-article-author-size: $unit * 2;
-$body-inline-article-author-margin: $unit * 2;
+$body-inline-post-author-color: $page-foreground-color;
+$body-inline-post-author-size: $unit * 2;
+$body-inline-post-author-margin: $unit * 2;
 
-$body-inline-article-blurb-margin-top: $unit;
-$body-inline-article-blurb-max-height: 4em;
-$body-inline-article-blurb-fade-height: 1.5em;
+$body-inline-post-blurb-margin-top: $unit;
+$body-inline-post-blurb-max-height: 4em;
+$body-inline-post-blurb-fade-height: 1.5em;
 
 @if $dark {
-  $body-inline-article-title-color: $page-foreground-color;
+  $body-inline-post-title-color: $page-foreground-color;
 }
 
 /* border */
@@ -68,25 +73,31 @@ $border-radius: 3px;
   $border-color-bottom: rgba(black, 0.4);
 }
 
-/* article */
+/* post */
 
-$article-category-font-size: $unit * 1.5;
-$article-category-foreground-color: mix($page-foreground-color, $background-color, 50%);
-$article-category-padding: $unit * 2;
+$post-category-font-size: $unit * 1.5;
+$post-category-foreground-color: mix($page-foreground-color, $background-color, 50%);
+$post-category-padding: $unit * 2;
 
-$article-header-vertical-padding: $unit * 4;
-$article-header-hero-height: 480px;
-$article-header-hero-padding: $unit * 2;
-$article-header-hero-fade-height: 240px;
+$post-header-vertical-padding: $unit * 4;
+$post-header-hero-height: 512px;
+$post-header-hero-padding: $unit * 2;
+$post-header-hero-fade-height: 240px;
+$post-header-hero-color: $page-background-color;
 
-$article-title-color: rgba($page-foreground-color, 0.9);
-$article-title-size: $unit * 4;
+$post-title-color: rgba($page-foreground-color, 0.9);
+$post-title-size: $unit * 5;
 
-$article-author-color: $page-foreground-color;
-$article-author-size: $unit * 3;
+$post-author-color: $page-foreground-color;
+$post-author-size: $unit * 3;
 
-$article-blurb-margin-top: $unit;
-$article-blurb-max-height: 4em;
-$article-blurb-fade-height: 1.5em;
+$post-blurb-margin-top: $unit;
+$post-blurb-max-height: 4em;
+$post-blurb-fade-height: 1.5em;
 
-$article-text-vertical-padding: $unit * 4;
+$post-text-vertical-padding: $unit * 4;
+
+/* text */
+
+$text-h1-font-size: $unit * 3;
+$text-h1-foreground-color: mix($page-foreground-color, $background-color, 70%);

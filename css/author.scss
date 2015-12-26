@@ -1,0 +1,50 @@
+
+@import 'values';
+@import 'outline';
+
+@import 'text';
+
+main.author {
+  
+  header {
+
+    position: relative;
+    border-bottom: $border-width solid $border-color;
+
+    padding: $post-header-vertical-padding $body-horizontal-padding;
+
+    h1.name {
+      font-size: $post-title-size;
+      color: $post-title-color;
+      font-weight: bold;
+      display: inline-block;
+    }
+    
+  }
+
+  .text {
+    padding: $body-vertical-padding $body-horizontal-padding;
+  }
+
+  .accounts {
+    padding: $body-vertical-padding $body-horizontal-padding;
+
+    list-style-type: none;
+    
+    li {
+
+      .service {
+        font-style: italic;
+        opacity: 0.7;
+      }
+
+      .name {
+        margin-left: $unit;
+        color: $theme-color;
+      }
+      
+    }
+    
+  }
+
+}

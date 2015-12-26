@@ -1,0 +1,37 @@
+
+@import 'outline';
+@import 'values';
+
+#footer {
+  background-color: $header-background-color;
+  border-top: $border-width solid $border-color;
+
+  padding: $body-vertical-padding $body-horizontal-padding;
+
+  text-align: center;
+
+  font-style: italic;
+
+  margin-top: 10em;
+  
+  > * {
+    margin: 0 $body-horizontal-padding;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .copyright {
+    margin-top: $unit;
+    display: block;
+    font-size: 12px;
+  }
+  
+}
+
+@media #{$small} {
+  #footer {
+    margin-top: 0;
+  }
+}

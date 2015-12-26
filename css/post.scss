@@ -1,0 +1,118 @@
+
+@import 'values';
+@import 'outline';
+
+@import 'text';
+
+main.post {
+  
+  article {
+
+    header {
+
+      position: relative;
+      border-bottom: $border-width solid $border-color;
+
+      .container {
+
+        padding: $post-header-vertical-padding $body-horizontal-padding;
+
+        h1.title {
+          font-size: $post-title-size;
+          color: $post-title-color;
+          font-weight: bold;
+          display: inline-block;
+        }
+        
+        h2.authors {
+          font-size: $post-author-size;
+          color: $post-author-color;
+          font-style: italic;
+
+          &:before {
+            content: 'by ';
+          }
+
+          .author {
+            text-decoration: underline;
+          }
+          
+        }
+
+      }
+
+      h3.date {
+        padding: 0 $body-horizontal-padding;
+        padding-bottom: $post-header-vertical-padding;
+      }
+      
+      .category {
+        position: absolute;
+        left: -$arbitrary-width - $body-horizontal-padding;
+        top: 0;
+        width: $arbitrary-width;
+        text-align: right;
+        padding: 0 $post-category-padding;
+        display: block;
+        margin-top: ($post-title-size - $post-category-font-size) / 2;
+
+        color: $post-category-foreground-color;
+        font-size: $post-category-font-size;
+        text-transform: uppercase;
+        font-weight: bold;
+
+      }
+
+      &.hero {
+        background-position: center;
+        background-size: cover;
+        height: $post-header-hero-height;
+        border-bottom: none;
+
+        &:after {
+          display: block;
+          content: '';
+          height: $post-header-hero-fade-height;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          background: linear-gradient(to bottom, rgba(black, 0), rgba(black, 0.5));
+        }
+
+        .container {
+          position: absolute;
+          bottom: 0;
+          text-align: center;
+          width: 100%;
+          z-index: 5;
+
+          * {
+            color: $post-header-hero-color !important;
+            text-shadow: 0 0 3px black;
+          }
+          
+        }
+        
+        h3.date {
+          color: $post-header-hero-color !important;
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+        
+      }
+      
+    }
+
+    .text {
+      padding: $body-vertical-padding $body-horizontal-padding;
+    }
+
+    post + post {
+      border-top: $border-width solid $border-color;
+    }
+    
+
+  }
+
+}

@@ -20,6 +20,7 @@
     > .logo.link {
       background-color: $theme-color;
       height: $header-logo-height;
+      width: $header-logo-width;
       display: inline-block;
       float: left;
 
@@ -37,20 +38,11 @@
 
       margin: 0 $header-horizontal-spacing;
 
-      a {
-        font-weight: bold;
-        font-size: $header-font-size;
-        text-transform: uppercase;
-        
-        color: rgba($header-foreground-color, 0.5);
-        line-height: $header-height;
-        display: block;
-      }
-
       ul {
 
         li {
-          margin: 0 $header-nav-horizontal-spacing;
+          margin: 0 $header-nav-horizontal-spacing / 2;
+          padding: 0 $header-nav-horizontal-spacing / 2;
 
           height: $header-height;
           
@@ -62,19 +54,102 @@
 
     }
     
-    .about {
+
+    nav a, .about a {
       font-weight: bold;
       font-size: $header-font-size;
       text-transform: uppercase;
-
-      margin-right: $header-nav-horizontal-spacing;
       
       color: rgba($header-foreground-color, 0.5);
       line-height: $header-height;
+      display: block;
+    }
+    
+    .about {
+      margin-right: $header-nav-horizontal-spacing;
+      padding: 0 $header-nav-horizontal-spacing / 2;
+      
+      height: $header-height;
       display: inline-block;
       float: right;
     }
     
   }
   
+}
+
+body.articles #header li.articles,
+body.article #header li.articles,
+body.news #header li.news,
+body.events #header li.events,
+body.event #header li.events,
+body.about #header .about {
+
+  border-bottom: 3px solid $theme-color;
+  a {
+    color: rgba($header-foreground-color, 0.8);
+  }
+
+  @media #{$tiny} {
+    border-bottom: none;
+    background-color: $theme-color;
+    a {
+      color: $theme-color-foreground;
+    }
+  }
+  
+}
+
+@media #{$small} {
+  #header {
+    border: none;
+  }
+}
+
+@media #{$tiny} {
+  #header {
+    height: auto;
+    text-align: center;
+    position: static;
+
+    .content {
+
+      height: 100%;
+
+      > .logo.link {
+        float: none;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: $unit;
+      }
+      
+      > nav {
+        display: block;
+        width: 100%;
+        margin: 0;
+        height: auto;
+
+        ul {
+
+          width: 100%;
+          li {
+            margin: 0;
+            padding: 0;
+            display: block;
+          }
+          
+        }
+        
+      }
+      
+      .about {
+        float: none;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+    }
+    
+  }
 }

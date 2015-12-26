@@ -1,10 +1,10 @@
 #!/bin/sh
 
-rm build -rf
-mkdir build
+#rm output/* -rf
+mkdir output
 
-scss css/main.scss build/main.css
+scss css/main.scss output/main.css
 
-cp media build/ -r
+cp media output/ -r
 
 ./generate.py

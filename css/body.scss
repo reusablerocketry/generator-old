@@ -4,86 +4,31 @@
 
 @import 'text';
 
-#body {
+main {
   background-color: $body-background-color;
   
   max-width: $page-max-width + $body-horizontal-padding;
   margin: 0 auto;
   margin-top: $header-height + $unit * 2;
 
+  overflow: hidden;
+
   @include outline();
 
-  article {
+}
 
-    padding: $body-vertical-padding $body-horizontal-padding;
-
-    header {
-
-      position: relative;
-
-      h1.title {
-        font-size: $body-inline-article-title-size;
-        color: $body-inline-article-title-color;
-        font-weight: bold;
-        display: inline-block;
-      }
-      
-      h2.author {
-        font-size: $body-inline-article-author-size;
-        color: $body-inline-article-author-color;
-        font-style: italic;
-        display: inline-block;
-        margin-left: $body-inline-article-author-margin;
-
-        &:before {
-          content: 'by ';
-        }
-      }
-
-      .category {
-        position: absolute;
-        left: -$arbitrary-width - $body-horizontal-padding;
-        top: 0;
-        width: $arbitrary-width;
-        text-align: right;
-        padding: 0 $article-category-padding;
-        display: block;
-        margin-top: ($body-inline-article-title-size - $article-category-font-size) / 2;
-
-        color: $article-category-foreground-color;
-        font-size: $article-category-font-size;
-        text-transform: uppercase;
-        font-weight: bold;
-
-      }
-      
-    }
-    
-    .blurb {
-      margin-top: $body-inline-article-blurb-margin-top;
-      overflow: hidden;
-      max-height: $body-inline-article-blurb-max-height;
-      position: relative;
-
-      &:after {
-        display: block;
-        content: '';
-        height: $body-inline-article-blurb-fade-height;
-        background: linear-gradient(to bottom, rgba($body-background-color, 0), $body-background-color);
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-      }
-      
-
-    }
-
-
-    article + article {
-      border-top: $border-width solid $border-color;
-    }
-    
+@media #{$small} {
+  main {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    max-width: none;
+    margin-top: $header-height;
   }
+}
 
+@media #{$tiny} {
+  main {
+    margin-top: 0;
+  }
 }

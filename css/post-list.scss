@@ -1,0 +1,105 @@
+
+@import 'values';
+@import 'outline';
+
+@import 'text';
+
+main.post-list {
+  
+  @media #{$small} {
+    border-bottom: $border-width solid $border-color;
+  }
+
+  article {
+
+    padding: $body-vertical-padding $body-horizontal-padding;
+    
+    @media #{$small} {
+      border-top: $border-width solid $border-color;
+    }
+    
+    header {
+
+      position: relative;
+
+      h1.title {
+        font-size: $body-inline-post-title-size;
+        color: $body-inline-post-title-color;
+        font-weight: bold;
+        display: inline-block;
+      }
+      
+      h2.authors {
+        font-size: $body-inline-post-author-size;
+        color: $body-inline-post-author-color;
+        font-style: italic;
+        display: inline-block;
+        margin-left: $body-inline-post-author-margin;
+
+        &:before {
+          content: 'by ';
+        }
+      }
+
+      .category {
+        position: absolute;
+        left: -$arbitrary-width - $body-horizontal-padding;
+        top: 0;
+        width: $arbitrary-width;
+        text-align: right;
+        padding: 0 $post-category-padding;
+        display: block;
+        margin-top: ($body-inline-post-title-size - $post-category-font-size) / 2;
+
+        color: $post-category-foreground-color;
+        font-size: $post-category-font-size;
+        text-transform: uppercase;
+        font-weight: bold;
+
+        @media #{$medium} {
+          position: static;
+          width: auto;
+          left: 0;
+        }
+        
+      }
+      
+    }
+    
+    .blurb {
+      margin-top: $body-inline-post-blurb-margin-top;
+      overflow: hidden;
+      max-height: $body-inline-post-blurb-max-height;
+      position: relative;
+
+      &:after {
+        display: block;
+        content: '';
+        height: $body-inline-post-blurb-fade-height;
+        background: linear-gradient(to bottom, rgba($body-background-color, 0), $body-background-color);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+      }
+      
+
+    }
+
+  }
+  
+  article + article {
+    border-top: $border-width solid $border-color;
+  }
+  
+
+  .empty {
+    text-align: center;
+    padding: $body-vertical-padding $body-horizontal-padding;
+    font-size: $unit * 3;
+    font-style: italic;
+    opacity: 0.5;
+  }
+
+}
+

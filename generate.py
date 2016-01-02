@@ -104,12 +104,19 @@ def generate_about(templates, authors):
 
 def generate_tools(templates):
   page_variables = {}
-  variables = {}
 
   page_variables['title'] = 'Tools'
   page_variables['pagetype'] = 'tools'
   
-  return templates.get('tools', variables, page_variables)
+  return templates.get('tools', {}, page_variables)
+
+def generate_404(templates):
+  page_variables = {}
+
+  page_variables['title'] = '404'
+  page_variables['pagetype'] = '404'
+  
+  return templates.get('404', {}, page_variables)
 
 def save_to(filename, text):
   if type(filename) == type([]):
@@ -136,6 +143,7 @@ if __name__ == '__main__':
     
     save_to('about/index.html', generate_about(templates, authors))
     save_to('tools/index.html', generate_tools(templates))
+    save_to('404.html', generate_404(templates))
 
     generate_authors(templates, authors)
   except util.GenException as e:

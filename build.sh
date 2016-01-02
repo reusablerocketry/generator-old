@@ -1,12 +1,11 @@
 #!/bin/sh
 
-mkdir output -p
 rm output/* -rf
+mkdir output -p
+mkdir output/media -p
+mkdir output/media/logo -p
 
 scss --sourcemap=none css/main.scss output/main.css
-
-mkdir output/media
-mkdir output/media/logo
 
 cp template/*.js output/
 

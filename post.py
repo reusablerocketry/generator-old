@@ -78,7 +78,11 @@ class Post:
       elif key == 'author':
         self.add_author(value, author_list)
       elif key == 'hero':
-        self.hero = os.path.join(prefix, value.strip())
+        value = value.strip()
+        if value[0] == '/':
+          self.hero = os.path.join(dirs.src, value[1:])
+        else:
+          self.hero = os.path.join(prefix, value)
         self.hero_output_path = os.path.join(os.path.split(filename)[0], 'hero' + os.path.splitext(self.hero)[1])
         self.hero_final_path = os.path.join('hero' + os.path.splitext(self.hero)[1])
         if not os.path.isfile(self.hero):

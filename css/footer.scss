@@ -18,14 +18,11 @@
     margin: 0 $body-horizontal-padding;
   }
 
-  a {
-    text-decoration: underline;
-  }
-
   .copyright {
     margin-top: $unit;
     display: block;
     font-size: 12px;
+    opacity: 0.75;
   }
   
 }

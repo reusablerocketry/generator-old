@@ -7,7 +7,7 @@ import htmlmin
 from markdown.treeprocessors import Treeprocessor
 from markdown.extensions import Extension
 
-shortname_maxlength = 50
+shortname_maxlength = 100
 
 class ImgExtractor(Treeprocessor):
   def run(self, doc):
@@ -33,7 +33,10 @@ def md_images(i):
 
 def text_to_shortname(text):
   text = '-'.join(text.split()).lower()
-  return re.sub('[^0-9a-zA-Z\-]+', '', text)[:shortname_maxlength]
+  text = re.sub('[^0-9a-zA-Z\-]+', '', text)
+  text = text[:shortname_maxlength]
+  if len(text) == shortname_maxlength: text += '-'
+  return text
 
 def andify(l):
   if len(l) == 0: return ''

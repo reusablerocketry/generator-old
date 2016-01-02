@@ -24,9 +24,14 @@ class Account:
     if self.service in ['reddit', 'twitter', 'email']:
       self.name = name.strip()
 
-    if self.service == 'reddit': self.link = 'http://www.reddit.com/user/' + self.name
-    if self.service == 'twitter': self.link = 'http://twitter.com/' + self.name
-    if self.service == 'email': self.link = 'mailto:' + self.name
+    if self.service == 'reddit':
+      self.link = 'http://www.reddit.com/user/' + self.name
+      self.name = '/u/' + self.name
+    if self.service == 'twitter':
+      self.link = 'http://twitter.com/' + self.name
+      self.name = '@' + self.name
+    if self.service == 'email':
+      self.link = 'mailto:' + self.name
 
   # GENERATE
 
@@ -59,7 +64,7 @@ class Author:
     return os.path.join('author', self.shortname, 'index.html')
 
   def get_final_path(self):
-    return os.path.join('author', self.shortname)
+    return os.path.join('author', self.shortname) + '/'
 
   def __repr__(self):
     return 'Author(' + self.shortname + ')'
@@ -126,8 +131,10 @@ class Author:
   # GENERATE
 
   def generate(self, templates):
+    print('author ' + self.shortname + '...', end='')
     filename = os.path.join(dirs.build, self.get_html_path())
     
     os.makedirs(os.path.split(filename)[0], exist_ok=True)
     open(filename, 'w').write(util.minify_html(self.get_html(templates)))
+    print('done')
     

@@ -12,11 +12,11 @@ $arbitrary-width: 5000px;
 
 // page
 
-$page-max-width: 960px;
+$page-image-width: 1000px;
 $page-background-color: white;
 $page-foreground-color: #444;
 
-$medium: "(max-width: 1200px)";
+$medium: "(max-width: 1400px)";
 $small: "(max-width: 1024px)";
 $tiny: "(max-width: 600px)";
 
@@ -44,7 +44,7 @@ $header-nav-horizontal-spacing: $unit * 2;
 $body-background-color: $page-background-color;
 
 $body-vertical-padding: $unit * 2;
-$body-horizontal-padding: $unit * 4;
+$body-horizontal-padding: $unit * 2;
 
 $body-inline-post-title-color: rgba($page-foreground-color, 0.7);
 $body-inline-post-title-size: $unit * 2.5;
@@ -66,7 +66,7 @@ $body-inline-post-blurb-fade-height: 1.5em;
 $border-width: 1px;
 $border-color: rgba(black, 0.15);
 $border-color-bottom: rgba(black, 0.2);
-$border-radius: 3px;
+$border-radius: 4px;
 
 @if $dark {
   $border-color: rgba(black, 0.3);
@@ -101,3 +101,8 @@ $post-text-vertical-padding: $unit * 4;
 
 $text-h1-font-size: $unit * 3;
 $text-h1-foreground-color: mix($page-foreground-color, $background-color, 70%);
+
+
+/* page width */
+
+$page-max-width: $page-image-width + $body-horizontal-padding * 2;

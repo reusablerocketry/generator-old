@@ -50,7 +50,7 @@ class Post:
     return os.path.join(util.category_dir(self.category), self.shortname, 'index.html')
 
   def get_final_path(self):
-    return os.path.join(util.category_dir(self.category), self.shortname)
+    return os.path.join(util.category_dir(self.category), self.shortname) + '/'
 
   def parse(self, filename, author_list):
     f = open(filename)
@@ -156,7 +156,7 @@ class Post:
     variables['category'] = self.category
     
     variables['text'] = self.get_html_text()
-
+    
     variables['date'] = time.strftime('%b %d, %Y %I:%M %p', time.localtime(self.publish_date))
     
     if self.hero:
@@ -173,6 +173,8 @@ class Post:
 
   def generate(self, template_list):
     if self.is_private(): return
+
+    print('post ' + self.shortname + '...', end='')
     
     filename = os.path.join(dirs.build, self.get_html_path())
     prefix = os.path.split(filename)[0]
@@ -191,3 +193,5 @@ class Post:
       shutil.copyfile(src, dest)
     
     open(filename, 'w').write(util.minify_html(self.get_html(template_list)))
+    
+    print('done')

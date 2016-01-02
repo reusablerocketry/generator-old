@@ -17,7 +17,7 @@ html, body {
 }
 
 html {
-  background-color: $background-color;
+  background: $background-color url('/media/background.png') repeat;
   color: $page-foreground-color;
   font: Roboto, sans-serif;
   font-size: $unit * 2;

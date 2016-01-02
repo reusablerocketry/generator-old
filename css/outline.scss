@@ -5,9 +5,11 @@
   border: $border-width solid $border-color;
   border-bottom-color: $border-color-bottom;
   border-radius: $border-radius;
+//  box-shadow: 0 1px 15px rgba(black, 0.2);
 }
 
 @mixin outline-bottom() {
   border-bottom: $border-width solid $border-color-bottom;
+//  box-shadow: 0 1px 15px rgba(black, 0.2);
 }
 

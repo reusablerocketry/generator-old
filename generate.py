@@ -23,21 +23,23 @@ import post
 
 def get_files(path, ext='md'):
   filenames = [os.path.join(path, f) for path, dirs, files in os.walk(path) for f in files]
-  #  filenames = [os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
   filenames = [x for x in filenames if os.path.splitext(x)[1][1:] == ext]
   return filenames
 
 # author
 
-def generate_authors(template_list):
+def get_authors(template_list):
   author_files = get_files(os.path.join('src', 'author'), '')
   authors = {}
   for a in author_files:
     a = author.Author(a)
     authors[a.shortname] = a
-    a.generate(template_list)
     
   return authors
+
+def generate_authors(template_list, author_list):
+  for a in author_list.values():
+    a.generate(template_list)
 
 def generate_posts(template_list, authors, category):
   if type(category) == type([]):
@@ -113,7 +115,7 @@ def save_to(filename, text):
 if __name__ == '__main__':
   try:
     templates = template.TemplateList()
-    authors = generate_authors(templates)
+    authors = get_authors(templates)
     posts = generate_posts(templates, authors, ['article', 'news', 'events'])
     
     save_to('index.html', generate_post_list(templates, posts))
@@ -122,6 +124,8 @@ if __name__ == '__main__':
     save_to('events/index.html', generate_post_list(templates, posts, ['events']))
     
     save_to('about/index.html', generate_about(templates, authors))
+
+    generate_authors(templates, authors)
   except util.GenException as e:
     print('! ' + str(e))
     

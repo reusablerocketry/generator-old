@@ -42,8 +42,8 @@ main.post {
       }
 
       h3.date {
-        padding: 0 $body-horizontal-padding;
-        padding-bottom: $post-header-vertical-padding;
+        padding: $body-horizontal-padding;
+        opacity: 0.75;
       }
       
       .category {
@@ -68,6 +68,7 @@ main.post {
         background-size: cover;
         height: $post-header-hero-height;
         border-bottom: none;
+        border-radius: $border-radius $border-radius 0 0;
 
         &:after {
           display: block;

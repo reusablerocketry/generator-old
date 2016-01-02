@@ -11,8 +11,6 @@ main {
   margin: 0 auto;
   margin-top: $header-height + $unit * 2;
 
-  overflow: hidden;
-
   @include outline();
 
 }

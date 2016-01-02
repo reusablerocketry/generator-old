@@ -56,11 +56,11 @@ def generate_posts(template_list, authors, category):
     
   return posts
 
-def generate_post_list(templates, posts, categories=[]):
+def generate_post_list(templates, posts, categories=[], title='', excluded=[]):
   post_list = []
   
   for post in posts:
-    if (categories and post.category not in categories) or post.is_private():
+    if (categories and post.category not in categories) or post.is_private() or post.category in excluded:
       continue
     post_list.append(post)
 
@@ -76,7 +76,7 @@ def generate_post_list(templates, posts, categories=[]):
   if len(post_list) == 0:
     variables['posts'] = templates.get_raw('post-list-empty', {'categories': variables['categories']})
   
-  page_variables['title'] = ''
+  page_variables['title'] = title
   page_variables['pagetype'] = ' '.join(categories) + ' post-list'
   
   return templates.get('post-list', variables, page_variables)
@@ -102,6 +102,14 @@ def generate_about(templates, authors):
   
   return templates.get('about', variables, page_variables)
 
+def generate_tools(templates):
+  page_variables = {}
+  variables = {}
+
+  page_variables['title'] = 'Tools'
+  page_variables['pagetype'] = 'tools'
+  
+  return templates.get('tools', variables, page_variables)
 
 def save_to(filename, text):
   if type(filename) == type([]):
@@ -116,14 +124,18 @@ if __name__ == '__main__':
   try:
     templates = template.TemplateList()
     authors = get_authors(templates)
-    posts = generate_posts(templates, authors, ['article', 'news', 'events'])
+    posts = generate_posts(templates, authors, ['article', 'news', 'events', 'update'])
+
+    save_to('index.html', generate_post_list(templates, posts, excluded=['update'], \
+                                             title='Welcoming the future of space launch'))
     
-    save_to('index.html', generate_post_list(templates, posts))
     save_to(['articles/index.html', 'article/index.html'], generate_post_list(templates, posts, ['article']))
     save_to('news/index.html', generate_post_list(templates, posts, ['news']))
     save_to('events/index.html', generate_post_list(templates, posts, ['events']))
+    save_to(['updates/index.html', 'update/index.html'], generate_post_list(templates, posts, ['update']))
     
     save_to('about/index.html', generate_about(templates, authors))
+    save_to('tools/index.html', generate_tools(templates))
 
     generate_authors(templates, authors)
   except util.GenException as e:

@@ -44,7 +44,7 @@ $header-nav-horizontal-spacing: $unit * 2;
 $body-background-color: $page-background-color;
 
 $body-vertical-padding: $unit * 2;
-$body-horizontal-padding: $unit * 2;
+$body-horizontal-padding: $unit * 4;
 
 $body-inline-post-title-color: rgba($page-foreground-color, 0.7);
 $body-inline-post-title-size: $unit * 2.5;
@@ -79,17 +79,17 @@ $post-category-font-size: $unit * 1.5;
 $post-category-foreground-color: mix($page-foreground-color, $background-color, 50%);
 $post-category-padding: $unit * 2;
 
-$post-header-vertical-padding: $unit * 4;
+$post-header-vertical-padding: $unit * 2;
 $post-header-hero-height: 512px;
 $post-header-hero-padding: $unit * 2;
 $post-header-hero-fade-height: 240px;
 $post-header-hero-color: $page-background-color;
 
 $post-title-color: rgba($page-foreground-color, 0.9);
-$post-title-size: $unit * 5;
+$post-title-size: $unit * 3;
 
 $post-author-color: $page-foreground-color;
-$post-author-size: $unit * 3;
+$post-author-size: $unit * 2;
 
 $post-blurb-margin-top: $unit;
 $post-blurb-max-height: 4em;

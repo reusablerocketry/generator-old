@@ -42,8 +42,11 @@ main.post {
       }
 
       h3.date {
-        padding: $body-horizontal-padding;
+        padding: $post-header-vertical-padding $body-horizontal-padding;
         opacity: 0.75;
+        position: absolute;
+        bottom: 0;
+        right: 0;
       }
       
       .category {

@@ -52,6 +52,8 @@ def category_dir(cat):
   if cat == 'article': return 'article'
   if cat == 'event': return 'event'
   if cat == 'news': return 'news'
+  if cat == 'update': return 'update'
+  return 'unsorted'
 
 class GenException(Exception):
   pass

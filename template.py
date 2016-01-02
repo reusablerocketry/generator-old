@@ -1,6 +1,7 @@
 
 import os
 
+import datetime
 import config
 import dirs
 
@@ -33,16 +34,17 @@ class TemplateList:
     self.templates[template] = Template(template)
 
   def get(self, template, variables={}, page_variables={}):
-    if template not in self.templates:
+    if template not in self.templates and template:
       self.add_template(template)
-    body = self.templates[template].get(variables)
-    body = body.replace('\n', '\n' + (' ' * 2 * 2)).strip()
+
+    page_variables['body'] = self.templates[template].get(variables)
     
     if 'title' not in page_variables or not page_variables['title']:
       page_variables['title'] = config.name
     else:
       page_variables['title'] = page_variables['title'] + config.titlesep + config.name
-    page_variables['body'] = body
+      
+    page_variables['date'] = datetime.datetime.now().isoformat()
     
     return self.master.get(page_variables)
 
@@ -51,3 +53,4 @@ class TemplateList:
       self.add_template(template)
       
     return self.templates[template].get(variables)
+  

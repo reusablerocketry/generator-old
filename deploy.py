@@ -12,12 +12,14 @@ def start_server():
 def deploy_github():
   print('Rebuilding local copy...')
   os.system('./build.sh')
-  print('Build complete. Check http://localhost:8000/ for any errors. Ctrl-C when done.')
-  
-  try:
-    start_server()
-  except KeyboardInterrupt:
-    os.chdir('..')
+  # print('Build complete. Check http://localhost:8000/ for any errors. Ctrl-C when done.')
+  print('Build complete.')
+
+  if False:
+    try:
+      start_server()
+    except KeyboardInterrupt:
+      os.chdir('..')
     
   print('Deploy to GitHub Pages?')
   i = input('[yes]/no: ').strip().lower()

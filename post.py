@@ -157,7 +157,8 @@ class Post:
     
     variables['text'] = self.get_html_text()
     
-    variables['date'] = time.strftime('%b %d, %Y %I:%M %p', time.localtime(self.publish_date))
+    variables['publish-date'] = time.strftime('%b %d, %Y %I %p (UTC)', time.gmtime(self.publish_date))
+    variables['publish-date-epoch'] = self.publish_date
     
     if self.hero:
       variables['hero'] = self.hero_final_path

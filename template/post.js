@@ -44,8 +44,10 @@ function time_difference(date) {
 }
 
 function replace_time() {
-  var el = $('h3.date');
-  el.text(time_difference(el.data('epoch')));
+  $('h3.date').each(function() {
+    var el = $(this);
+    el.text(time_difference(el.data('epoch')));
+  });
 }
 
 replace_time()

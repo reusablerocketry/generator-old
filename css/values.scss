@@ -10,11 +10,17 @@ $theme-color-foreground: white;
 
 $arbitrary-width: 5000px;
 
+$anim: 0.15s;
+
 // page
 
 $page-image-width: 1000px;
 $page-background-color: white;
 $page-foreground-color: #444;
+
+$page-link-color: rgba($theme-color, 0.3);
+$page-link-color-hover: rgba($theme-color, 0.6);
+$page-link-foreground-color: #222;
 
 $medium: "(max-width: 1400px)";
 $small: "(max-width: 1024px)";
@@ -25,6 +31,10 @@ $tiny: "(max-width: 600px)";
 
   $page-background-color: #555;
   $page-foreground-color: #ccc;
+  
+  $page-link-color: rgba($theme-color, 0.15);
+  $page-link-color: rgba($theme-color, 0.3);
+  $page-link-foreground-color: #fff;
 }
 
 /* header */
@@ -52,6 +62,8 @@ $body-inline-post-title-size: $unit * 2.5;
 $body-inline-post-author-color: $page-foreground-color;
 $body-inline-post-author-size: $unit * 2;
 $body-inline-post-author-margin: $unit * 2;
+
+$body-inline-post-date-margin: $unit * 2;
 
 $body-inline-post-blurb-margin-top: $unit;
 $body-inline-post-blurb-max-height: 4em;

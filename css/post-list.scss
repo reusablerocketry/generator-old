@@ -41,6 +41,13 @@ main.post-list {
         }
       }
 
+      h3.date {
+        font-size: $body-inline-post-author-size;
+        opacity: 0.75;
+        display: inline-block;
+        margin-left: $body-inline-post-date-margin;
+      }
+
       .category {
         position: absolute;
         left: -$arbitrary-width - $body-horizontal-padding;

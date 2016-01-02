@@ -29,7 +29,15 @@
   }
 
   a {
-    text-decoration: underline;
+    margin: 0 3px;
+    box-shadow: 0 3px 0 $page-link-color;
+
+    transition: box-shadow $anim ease, color $anim ease;
+
+    &:hover {
+      color: $page-link-foreground-color;
+      box-shadow: 0 3px 0 $page-link-color-hover;
+    }
   }
 
   img {

@@ -142,6 +142,9 @@ class Post:
     
     variables['link'] = self.get_final_path()
 
+    variables['publish-date'] = time.strftime('%b %d, %Y %I %p (UTC)', time.gmtime(self.publish_date))
+    variables['publish-date-epoch'] = self.publish_date
+    
     return template_list.get_raw('post-list-item', variables)
     
   def get_html(self, template_list):

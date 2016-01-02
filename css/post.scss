@@ -26,7 +26,7 @@ main.post {
         
         h2.authors {
           font-size: $post-author-size;
-          color: $post-author-color;
+          color: rgba($post-author-color, 0.6);
           font-style: italic;
 
           &:before {
@@ -34,7 +34,7 @@ main.post {
           }
 
           .author {
-            text-decoration: underline;
+            color: $post-author-color;
           }
           
         }

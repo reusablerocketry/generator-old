@@ -18,9 +18,10 @@ main.post {
         padding: $post-header-vertical-padding $body-horizontal-padding;
 
         h1.title {
+          @include header();
+          font-weight: 100;
           font-size: $post-title-size;
           color: $post-title-color;
-          font-weight: bold;
           display: inline-block;
         }
         
@@ -34,6 +35,7 @@ main.post {
           }
 
           .author {
+            @include link();
             color: $post-author-color;
           }
           
@@ -119,4 +121,16 @@ main.post {
 
   }
 
+}
+
+body.terms.post {
+
+  h1.title {
+    font-size: 300% !important;
+  }
+  
+  h3.date {
+    display: none !important;
+  }
+  
 }

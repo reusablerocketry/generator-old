@@ -38,23 +38,28 @@ def get_authors(template_list):
   return authors
 
 def generate_authors(template_list, author_list):
+  print('= generating authors')
   for a in author_list.values():
     a.generate(template_list)
 
-def generate_posts(template_list, authors, category):
+def get_posts(template_list, authors, category):
   if type(category) == type([]):
     a = []
     for x in category:
-      a.extend(generate_posts(templates, authors, x))
+      a.extend(get_posts(templates, authors, x))
     return a
   post_files = get_files(os.path.join('src', category), 'md')
   posts = []
   for p in post_files:
     p = post.Post(p, category, authors)
     posts.append(p)
-    p.generate(template_list)
     
   return posts
+
+def generate_posts(template_list, posts):
+  print('= generating posts')
+  for p in posts:
+    p.generate(template_list)
 
 def generate_post_list(templates, posts, categories=[], title='', excluded=[]):
   post_list = []
@@ -131,21 +136,45 @@ if __name__ == '__main__':
   try:
     templates = template.TemplateList()
     authors = get_authors(templates)
-    posts = generate_posts(templates, authors, ['article', 'news', 'events', 'update'])
+    posts = get_posts(templates, authors, ['article', 'news', 'events', 'update', 'terms'])
 
-    save_to('index.html', generate_post_list(templates, posts, excluded=['update'], \
+    save_to('index.html', generate_post_list(templates, posts, excluded=['update', 'terms'], \
                                              title='Welcoming the future of space launch'))
     
     save_to(['articles/index.html', 'article/index.html'], generate_post_list(templates, posts, ['article']))
     save_to('news/index.html', generate_post_list(templates, posts, ['news']))
     save_to('events/index.html', generate_post_list(templates, posts, ['events']))
     save_to(['updates/index.html', 'update/index.html'], generate_post_list(templates, posts, ['update']))
+    save_to('terms/index.html', generate_post_list(templates, posts, ['terms']))
     
     save_to('about/index.html', generate_about(templates, authors))
     save_to('tools/index.html', generate_tools(templates))
+    
     save_to('404.html', generate_404(templates))
 
     generate_authors(templates, authors)
+    generate_posts(templates, posts)
+
+    # warn of nonexistent terms
+
+    existing_terms = [x.shortname for x in posts if x.category == 'terms']
+    used_terms = []
+    
+    for post in posts:
+      used_terms.extend(post.get_terms())
+
+    existing_terms = list(set(existing_terms))
+    used_terms = list(set(used_terms))
+
+    missing_terms = []
+
+    for term in used_terms:
+      if term not in existing_terms:
+        missing_terms.append(term)
+
+    if missing_terms:
+      print('warning: missing terms ' + util.andify(sorted(missing_terms)))
+      
   except util.GenException as e:
     print('! ' + str(e))
     

@@ -7,7 +7,8 @@
 main {
   background-color: $body-background-color;
   
-  max-width: $page-max-width + $body-horizontal-padding;
+  width: $page-max-width + $border-width * 2;
+  max-width: 100%;
   margin: 0 auto;
   margin-top: $header-height + $unit * 2;
 

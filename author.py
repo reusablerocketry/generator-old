@@ -131,7 +131,7 @@ class Author:
   # GENERATE
 
   def generate(self, templates):
-    print('author ' + self.shortname + '...', end='')
+    print('  ' + self.shortname + '...', end='')
     filename = os.path.join(dirs.build, self.get_html_path())
     
     os.makedirs(os.path.split(filename)[0], exist_ok=True)

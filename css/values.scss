@@ -18,10 +18,6 @@ $page-image-width: 1000px;
 $page-background-color: white;
 $page-foreground-color: #444;
 
-$page-link-color: rgba($theme-color, 0.3);
-$page-link-color-hover: rgba($theme-color, 0.6);
-$page-link-foreground-color: #222;
-
 $medium: "(max-width: 1400px)";
 $small: "(max-width: 1024px)";
 $tiny: "(max-width: 600px)";
@@ -31,10 +27,6 @@ $tiny: "(max-width: 600px)";
 
   $page-background-color: #555;
   $page-foreground-color: #ccc;
-  
-  $page-link-color: rgba($theme-color, 0.15);
-  $page-link-color: rgba($theme-color, 0.3);
-  $page-link-foreground-color: #fff;
 }
 
 /* header */
@@ -44,7 +36,7 @@ $header-foreground-color: $page-foreground-color;
 $header-font-size: $unit * 2;
 
 $header-height: 60px;
-$header-logo-width: 180px;
+$header-logo-width: 200px;
 $header-logo-height: 64px;
 $header-horizontal-spacing: $unit * 3;
 $header-nav-horizontal-spacing: $unit * 2;
@@ -72,6 +64,10 @@ $body-inline-post-blurb-fade-height: 1.5em;
 @if $dark {
   $body-inline-post-title-color: $page-foreground-color;
 }
+
+$page-link-color: rgba(mix($theme-color, $body-background-color, 50%), 0.5);
+$page-link-color-hover: rgba($page-link-color, 1.0);
+$page-link-foreground-color: #222;
 
 /* border */
 
@@ -117,4 +113,8 @@ $text-h1-foreground-color: mix($page-foreground-color, $background-color, 70%);
 
 /* page width */
 
-$page-max-width: $page-image-width + $body-horizontal-padding * 2;
+$page-max-width: $page-image-width;
+
+@mixin header() {
+  font-family: Montserrat, sans-serif;
+}

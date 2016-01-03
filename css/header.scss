@@ -6,6 +6,8 @@
   background-color: $header-background-color;
   height: $header-height;
   width: 100%;
+
+  @include header();
   
   @include outline-bottom();
 
@@ -23,11 +25,23 @@
       width: $header-logo-width;
       display: inline-block;
       float: left;
+      position: relative;
 
       img {
         height: $header-logo-height;
       }
-      
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: $header-logo-width;
+        height: $header-logo-height - $border-width;
+        border-bottom: $border-width solid $border-color;
+      }
+
     }
 
     > nav {
@@ -56,7 +70,6 @@
     
 
     nav a, .about a {
-      font-weight: bold;
       font-size: $header-font-size;
       text-transform: uppercase;
       
@@ -102,7 +115,7 @@ body.about #header .about {
 
 @media #{$small} {
   #header {
-    border: none;
+
   }
 }
 
@@ -119,8 +132,13 @@ body.about #header .about {
       > .logo.link {
         float: none;
         display: block;
-        margin: 0 auto;
+        margin: 0;
+        width: 100%;
         margin-bottom: $unit;
+
+        &:after {
+          width: 100%;
+        }
       }
       
       > nav {

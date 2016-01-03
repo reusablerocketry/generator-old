@@ -7,6 +7,8 @@ import config
 import dirs
 import util
 
+import path
+
 required_keys = ['title', 'author']
 
 ################################################################
@@ -15,7 +17,7 @@ required_keys = ['title', 'author']
 
 class Post:
 
-  def __init__(self, filename, category, author_list):
+  def __init__(self, filename, category, author_list, local=False):
     self.filename = filename
     self.shortname = None
     self.category = category
@@ -24,13 +26,14 @@ class Post:
     self.authors = []
 
     self.private = False
+    self.local = local
     
     self.text = ''
 
     # hero image
     self.hero = None
-    self.hero_output_path = None
-    self.hero_final_path = None
+
+    self.hero_caption = None
     
     self.publish_date = 0
     
@@ -42,15 +45,22 @@ class Post:
     return 'Post(' + self.filename + ')'
 
   def is_private(self):
+    if self.local: return False
     if self.publish_date <= 0: return True
     if self.private: return True
     return False
 
-  def get_html_path(self):
+  def get_local_output_path(self):
     return os.path.join(util.category_dir(self.category), self.shortname, 'index.html')
 
-  def get_final_path(self):
+  def get_post_path(self):
     return os.path.join(util.category_dir(self.category), self.shortname) + '/'
+
+  def get_local_root(self):
+    return os.path.split(self.filename)[0]
+
+  def get_local_output_root(self):
+    return os.path.split(self.get_local_output_path())[0]
 
   def parse(self, filename, author_list):
     f = open(filename)
@@ -79,14 +89,9 @@ class Post:
         self.add_author(value, author_list)
       elif key == 'hero':
         value = value.strip()
-        if value[0] == '/':
-          self.hero = os.path.join(dirs.src, value[1:])
-        else:
-          self.hero = os.path.join(prefix, value)
-        self.hero_output_path = os.path.join(os.path.split(filename)[0], 'hero' + os.path.splitext(self.hero)[1])
-        self.hero_final_path = os.path.join('hero' + os.path.splitext(self.hero)[1])
-        if not os.path.isfile(self.hero):
-          raise util.GenException('hero image "' + self.hero + '" does not exist')
+        self.hero = value
+      elif key == 'hero-caption':
+        self.hero_caption = value.strip()
       elif key == 'private':
         value = value.lower().strip()
         if value in ['yes', 'true']: self.private = True
@@ -104,6 +109,13 @@ class Post:
 
     self.shortname = util.text_to_shortname(self.title)
     self.text = f.read()
+
+    if self.hero:
+      ext = os.path.splitext(self.hero)[1]
+      self.hero = path.Path(self.hero, 'hero' + ext, self.get_local_root(), self.get_local_output_root())
+      if not os.path.isfile(self.hero.get_local_path()) and not self.is_private():
+        raise util.GenException('hero image "' + self.hero.get_local_path() + '" does not exist')
+
 
   def set_title(self, title):
     self.title = title.strip()
@@ -127,6 +139,9 @@ class Post:
   def get_images(self):
     return util.md_images(self.text)
 
+  def get_terms(self):
+    return util.md_terms(self.text)
+
   def get_html_authors(self, template_list):
     x = []
     for a in self.authors:
@@ -144,7 +159,7 @@ class Post:
     
     variables['category'] = self.category
     
-    variables['link'] = self.get_final_path()
+    variables['link'] = self.get_post_path()
 
     variables['publish-date'] = time.strftime('%b %d, %Y %I %p (UTC)', time.gmtime(self.publish_date))
     variables['publish-date-epoch'] = self.publish_date
@@ -168,13 +183,14 @@ class Post:
     variables['publish-date-epoch'] = self.publish_date
     
     if self.hero:
-      variables['hero'] = self.hero_final_path
+      variables['hero'] = self.hero.get_output_path()
+      variables['hero-caption'] = self.hero_caption
       variables['header'] = template_list.get_raw('post-header-hero', variables)
     else:
       variables['header'] = template_list.get_raw('post-header', variables)
 
     page_variables['title'] = self.title
-    page_variables['pagetype'] = self.category
+    page_variables['pagetype'] = self.category + ' post'
     return template_list.get('post', variables, page_variables)
   
   # GENERATE
@@ -182,21 +198,23 @@ class Post:
   def generate(self, template_list):
     if self.is_private(): return
 
-    print('post ' + self.shortname + '...', end='')
+    print('  ' + util.category_dir(self.category) + ' ' + self.shortname + '...', end='')
     
-    filename = os.path.join(dirs.build, self.get_html_path())
+    filename = os.path.join(dirs.build, self.get_local_output_path())
     prefix = os.path.split(filename)[0]
     
     os.makedirs(os.path.split(filename)[0], exist_ok=True)
     
     if self.hero:
-      shutil.copyfile(self.hero, os.path.join(prefix, 'hero' + os.path.splitext(self.hero)[1]))
+      shutil.copyfile(self.hero.get_local_path(), self.hero.get_local_output_path())
 
     images = self.get_images()
     
     for i in images:
-      src = os.path.join(os.path.split(self.filename)[0], i)
-      dest = os.path.join(prefix, i)
+      image_path = path.Path(i, i, self.get_local_root(), self.get_local_output_root())
+      src = image_path.get_local_path();
+      dest = image_path.get_local_output_path()
+      print(dest)
       os.makedirs(os.path.split(dest)[0], exist_ok=True)
       shutil.copyfile(src, dest)
     

@@ -1,6 +1,18 @@
 
 @import 'values';
 
+@mixin link() {
+  margin: 0 3px;
+  box-shadow: 0 1px 0 $page-link-color, inset 0 -2px 0 $page-link-color;
+
+  transition: box-shadow $anim ease, color $anim ease;
+
+  &:hover {
+    color: $page-link-foreground-color;
+    box-shadow: 0 1px 0 $page-link-color-hover, inset 0 -2px 0 $page-link-color-hover;
+  }
+}
+
 .text {
 
   line-height: 150%;
@@ -29,19 +41,20 @@
   }
 
   a {
-    margin: 0 3px;
-    box-shadow: 0 3px 0 $page-link-color;
-
-    transition: box-shadow $anim ease, color $anim ease;
-
-    &:hover {
-      color: $page-link-foreground-color;
-      box-shadow: 0 3px 0 $page-link-color-hover;
-    }
+    @include link();
   }
 
   img {
-    max-width: 100%;
+    width: $page-image-width;
+    margin-left: -$body-horizontal-padding * 2;
   }
 
 }
+
+@media #{$small} {
+  .text img {
+    width: 100vw !important;
+    height: auto;
+  }
+}
+

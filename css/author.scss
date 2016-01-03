@@ -36,18 +36,14 @@ main.author {
       line-height: 150%;
 
       .service {
-        font-style: italic;
-        opacity: 0.7;
-        text-align: right;
         display: none;
       }
 
       .name {
+        @include link();
+        
         font-family: monospace;
-        font-weight: bold;
-        margin-left: $unit;
-        color: $theme-color;
-      }
+     }
       
     }
     

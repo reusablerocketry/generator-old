@@ -110,3 +110,10 @@ main.post-list {
 
 }
 
+body.terms.post-list {
+  
+  h2.authors, h3.date {
+    display: none !important;
+  }
+  
+}

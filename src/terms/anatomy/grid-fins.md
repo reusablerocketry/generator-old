@@ -18,5 +18,3 @@ fins. Grid fins have several advantages over planar fins:
 They are used on the [SpaceX](term) [Falcon 9](term)
 [booster stage](term) to provide aerodynamic control of the vehicle
 during its [reentry](term) and [landing](term:propulsive landing).
-
-![Grid fins:](media/grid-fins.jpg)

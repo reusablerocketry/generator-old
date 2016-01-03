@@ -156,7 +156,7 @@ class Post:
     
     variables['title'] = self.title
     variables['authors'] = self.get_html_authors(template_list)
-    
+
     variables['category'] = self.category
     
     variables['link'] = self.get_post_path()

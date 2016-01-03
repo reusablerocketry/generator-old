@@ -136,16 +136,16 @@ if __name__ == '__main__':
   try:
     templates = template.TemplateList()
     authors = get_authors(templates)
-    posts = get_posts(templates, authors, ['article', 'news', 'events', 'update', 'terms'])
+    posts = get_posts(templates, authors, ['article', 'news', 'update', 'term'])
 
-    save_to('index.html', generate_post_list(templates, posts, excluded=['update', 'terms'], \
+    save_to('index.html', generate_post_list(templates, posts, excluded=['update', 'term'], \
                                              title='Welcoming the future of space launch'))
     
-    save_to(['articles/index.html', 'article/index.html'], generate_post_list(templates, posts, ['article']))
-    save_to('news/index.html', generate_post_list(templates, posts, ['news']))
-    save_to('events/index.html', generate_post_list(templates, posts, ['events']))
-    save_to(['updates/index.html', 'update/index.html'], generate_post_list(templates, posts, ['update']))
-    save_to('terms/index.html', generate_post_list(templates, posts, ['terms']))
+    save_to(['articles/index.html', 'article/index.html'], generate_post_list(templates, posts, ['article'], title='Articles'))
+    save_to('news/index.html', generate_post_list(templates, posts, ['news'], title='News'))
+    save_to('terms/index.html', generate_post_list(templates, posts, ['term'], title='Terms'))
+    
+    save_to(['updates/index.html', 'update/index.html'], generate_post_list(templates, posts, ['update'], title='Updates'))
     
     save_to('about/index.html', generate_about(templates, authors))
     save_to('tools/index.html', generate_tools(templates))

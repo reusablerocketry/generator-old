@@ -109,10 +109,9 @@ def minify_html(i):
 
 def category_dir(cat):
   if cat == 'article': return 'article'
-  if cat == 'event': return 'event'
   if cat == 'news': return 'news'
   if cat == 'update': return 'update'
-  if cat == 'terms': return 'term'
+  if cat == 'term': return 'term'
   return 'unsorted'
 
 class GenException(Exception):

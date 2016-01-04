@@ -3,7 +3,7 @@ import shutil
 import os
 import time
 
-import config
+import settings
 import dirs
 import util
 

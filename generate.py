@@ -9,7 +9,6 @@ import hashlib
 import re
 
 import dirs
-import config
 
 import util
 

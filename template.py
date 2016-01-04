@@ -2,7 +2,7 @@
 import os
 
 import datetime
-import config
+import settings
 import dirs
 
 ################################################################
@@ -40,9 +40,9 @@ class TemplateList:
     page_variables['body'] = self.templates[template].get(variables)
     
     if 'title' not in page_variables or not page_variables['title']:
-      page_variables['title'] = config.name
+      page_variables['title'] = settings.name
     else:
-      page_variables['title'] = page_variables['title'] + config.titlesep + config.name
+      page_variables['title'] = page_variables['title'] + settings.titlesep + settings.name
       
     page_variables['date'] = datetime.datetime.now().isoformat()
     

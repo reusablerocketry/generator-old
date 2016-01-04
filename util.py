@@ -8,6 +8,8 @@ from markdown.treeprocessors import Treeprocessor
 from markdown.extensions import Extension
 from markdown.util import etree
 
+import hashlib
+
 shortname_maxlength = 100
 
 class ImageExtension(Extension):
@@ -116,3 +118,8 @@ def category_dir(cat):
 
 class GenException(Exception):
   pass
+
+def unique_hash(t):
+  hash_object = hashlib.md5(bytes(t, 'utf-8'))
+  return hash_object.hexdigest()
+

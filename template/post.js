@@ -24,6 +24,9 @@ function time_difference(date) {
   } else if(elapsed < day) {
     factor = hour;
     unit = 'hour';
+  } else if(elapsed < week) {
+    factor = day;
+    unit = 'day';
   } else if(elapsed < month) {
     factor = week;
     unit = 'week';
@@ -37,7 +40,7 @@ function time_difference(date) {
 
   var value = Math.round(elapsed / factor)
   var plural = 's';
-  
+
   if(value == 1) plural = ''
     
   return value + ' ' + unit + plural + ' ago'

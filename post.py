@@ -19,14 +19,17 @@ class Post:
 
   def __init__(self, filename, category, author_list, local=False):
     self.filename = filename
+    self.path = path.Path(filename, 'index.html')
     self.shortname = None
     self.category = category
     
     self.title = ''
+    self.unique = '' # unique string, used for hashing
+    self.unique_hash = None # hash of unique
     self.authors = []
-
+    
+    self.draft = False
     self.private = False
-    self.local = local
     
     self.text = ''
 
@@ -37,35 +40,47 @@ class Post:
     
     self.publish_date = 0
     
-    self.modify_date = os.stat(filename).st_mtime
+    self.modify_date = os.stat(self.get_local_path()).st_mtime
     
-    self.parse(filename, author_list)
+    self.parse(author_list)
 
   def __repr__(self):
     return 'Post(' + self.filename + ')'
 
   def is_private(self):
-    if self.local: return False
+    if self.draft: return True
     if self.publish_date <= 0: return True
     if self.private: return True
     return False
 
-  def get_local_output_path(self):
-    return os.path.join(util.category_dir(self.category), self.shortname, 'index.html')
+  def get_local_path(self, with_prefix=True):
+    # content/post/adsf/adsf.md
+    return self.path.get_local_path(with_prefix)
+
+  def get_local_output_path(self, with_prefix=True):
+    # output/post/name-foo-bar/index.html
+    return self.path.get_local_output_path(with_prefix)
+
+  # root
+
+  def get_local_root(self, with_prefix=True):
+    # output/post/name-foo-bar/
+    return os.path.dirname(self.get_local_path(with_prefix))
+
+  def get_local_output_root(self, with_prefix=True):
+    # output/post/name-foo-bar/
+    return os.path.dirname(self.get_local_output_path(with_prefix))
+
+  # post
 
   def get_post_path(self):
-    return os.path.join(util.category_dir(self.category), self.shortname) + '/'
+    # /post/name-foo-bar/
+    return os.path.dirname(self.path.get_output_path())
 
-  def get_local_root(self):
-    return os.path.split(self.filename)[0]
+  # PARSE FILE
 
-  def get_local_output_root(self):
-    return os.path.split(self.get_local_output_path())[0]
-
-  def parse(self, filename, author_list):
-    f = open(filename)
-
-    prefix = os.path.split(filename)[0]
+  def parse(self, author_list):
+    f = open(self.get_local_path(True))
 
     keys = []
 
@@ -83,18 +98,31 @@ class Post:
 
       keys.append(key)
 
+      # title: awesome foobar title
       if key == 'title':
         self.set_title(value)
+
+      # author: foo
+      # author: bar
       elif key == 'author':
         self.add_author(value, author_list)
+        
+      elif key == 'unique':
+        self.set_unique(value.strip())
+
+      # hero: /media/spacex-mars.jpg
       elif key == 'hero':
         value = value.strip()
         self.hero = value
       elif key == 'hero-caption':
         self.hero_caption = value.strip()
+
+      # private: true
       elif key == 'private':
         value = value.lower().strip()
         if value in ['yes', 'true']: self.private = True
+
+      # publish-date: <epoch>
       elif key == 'publish-date':
         try:
           self.publish_date = int(value.strip())
@@ -107,18 +135,26 @@ class Post:
       if k not in keys:
         raise util.GenException('required key "' + k + '" not present in "' + self.filename + '"')
 
-    self.shortname = util.text_to_shortname(self.title)
+    if not self.unique: self.set_unique(self.title)
+    
+    self.shortname = util.text_to_shortname(self.unique)
+    self.path.set_output_root(os.path.join(util.category_dir(self.category), self.shortname))
+
     self.text = f.read()
 
     if self.hero:
       ext = os.path.splitext(self.hero)[1]
-      self.hero = path.Path(self.hero, 'hero' + ext, self.get_local_root(), self.get_local_output_root())
-      if not os.path.isfile(self.hero.get_local_path()) and not self.is_private():
-        raise util.GenException('hero image "' + self.hero.get_local_path() + '" does not exist')
-
+      self.hero = path.Path(self.hero, 'hero' + ext, self.get_local_root(False), self.get_local_output_root(False))
+      if not os.path.isfile(self.hero.get_local_path(True)):
+        raise util.GenException('hero image "' + self.hero.get_local_path(True) + '" does not exist ' + \
+                                '(wanted by "' + self.path.get_local_path(True) + '")')
 
   def set_title(self, title):
     self.title = title.strip()
+
+  def set_unique(self, unique):
+    self.unique = unique
+    self.unique_hash = util.unique_hash(unique.strip())
 
   def add_author(self, author, author_list):
     author = author.strip()
@@ -166,7 +202,7 @@ class Post:
     
     return template_list.get_raw('post-list-item', variables)
     
-  def get_html(self, template_list):
+  def generate_html(self, template_list):
     page_variables = {}
     variables = {}
     
@@ -195,15 +231,9 @@ class Post:
   
   # GENERATE
 
-  def generate(self, template_list):
-    if self.is_private(): return
+  def copy_files(self):
 
-    print('  ' + util.category_dir(self.category) + ' ' + self.shortname + '...', end='')
-    
-    filename = os.path.join(dirs.build, self.get_local_output_path())
-    prefix = os.path.split(filename)[0]
-    
-    os.makedirs(os.path.split(filename)[0], exist_ok=True)
+    os.makedirs(self.get_local_output_root(), exist_ok=True)
     
     if self.hero:
       shutil.copyfile(self.hero.get_local_path(), self.hero.get_local_output_path())
@@ -212,12 +242,24 @@ class Post:
     
     for i in images:
       image_path = path.Path(i, i, self.get_local_root(), self.get_local_output_root())
-      src = image_path.get_local_path();
+      src = image_path.get_local_path()
       dest = image_path.get_local_output_path()
-      print(dest)
       os.makedirs(os.path.split(dest)[0], exist_ok=True)
       shutil.copyfile(src, dest)
     
-    open(filename, 'w').write(util.minify_html(self.get_html(template_list)))
+  def generate(self, template_list, filenames=None):
+    print('  ' + util.category_dir(self.category) + ' ' + self.shortname + '...', end='')
+
+    self.copy_files()
+
+    content = util.minify_html(self.generate_html(template_list))
+
+    if not filenames:
+      filenames = []
+      
+    filenames.append(self.get_local_output_path())
+
+    for filename in filenames:
+      open(filename, 'w').write(content)
     
     print('done')

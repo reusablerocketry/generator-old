@@ -51,6 +51,7 @@ def get_posts(template_list, authors, category):
   post_files = get_files(os.path.join(dirs.src, category), 'md')
   posts = []
   for p in post_files:
+    p = p.split('/', 1)[1] # remove dirs.src
     p = post.Post(p, category, authors)
     posts.append(p)
     

@@ -1,4 +1,4 @@
 
-src = 'src'
+src = 'content'
 build = 'output'
 template = 'template'

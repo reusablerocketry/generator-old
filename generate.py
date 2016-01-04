@@ -29,7 +29,7 @@ def get_files(path, ext='md'):
 # author
 
 def get_authors(template_list):
-  author_files = get_files(os.path.join('src', 'author'), '')
+  author_files = get_files(os.path.join(dirs.src, 'author'), '')
   authors = {}
   for a in author_files:
     a = author.Author(a)
@@ -48,7 +48,7 @@ def get_posts(template_list, authors, category):
     for x in category:
       a.extend(get_posts(templates, authors, x))
     return a
-  post_files = get_files(os.path.join('src', category), 'md')
+  post_files = get_files(os.path.join(dirs.src, category), 'md')
   posts = []
   for p in post_files:
     p = post.Post(p, category, authors)

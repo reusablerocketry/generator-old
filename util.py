@@ -123,3 +123,7 @@ def unique_hash(t):
   hash_object = hashlib.md5(bytes(t, 'utf-8'))
   return hash_object.hexdigest()
 
+
+def redirect(url):
+  return """<!doctype html><html><head><title>Redirecting</title><meta http-equiv="refresh" content="0; url={url}"></head><body class="redirect">Redirecting...</body></html>""".format(url=url)
+  

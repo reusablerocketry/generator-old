@@ -26,6 +26,7 @@ class Post:
     self.title = ''
     self.unique = '' # unique string, used for hashing
     self.unique_hash = None # hash of unique
+    self.synonyms = []
     self.authors = []
     
     self.draft = False
@@ -110,6 +111,9 @@ class Post:
       elif key == 'unique':
         self.set_unique(value.strip())
 
+      elif key == 'synonym':
+        self.add_synonym(value.strip())
+
       # hero: /media/spacex-mars.jpg
       elif key == 'hero':
         value = value.strip()
@@ -135,7 +139,10 @@ class Post:
       if k not in keys:
         raise util.GenException('required key "' + k + '" not present in "' + self.filename + '"')
 
-    if not self.unique: self.set_unique(self.title)
+    if not self.unique:
+      self.set_unique(self.title)
+    else:
+      self.add_synonym(self.title)
     
     self.shortname = util.text_to_shortname(self.unique)
     self.path.set_output_root(os.path.join(util.category_dir(self.category), self.shortname))
@@ -155,6 +162,10 @@ class Post:
   def set_unique(self, unique):
     self.unique = unique
     self.unique_hash = util.unique_hash(unique.strip())
+    self.add_synonym(unique)
+
+  def add_synonym(self, synonym):
+    self.synonyms.append(synonym)
 
   def add_author(self, author, author_list):
     author = author.strip()
@@ -174,6 +185,9 @@ class Post:
 
   def get_images(self):
     return util.md_images(self.text)
+
+  def get_synonyms(self):
+    return self.synonyms
 
   def get_terms(self):
     return util.md_terms(self.text)
@@ -218,9 +232,12 @@ class Post:
     variables['publish-date'] = time.strftime('%b %d, %Y %I %p (UTC)', time.gmtime(self.publish_date))
     variables['publish-date-epoch'] = self.publish_date
     
+    variables['header-classes'] = ''
     if self.hero:
       variables['hero'] = self.hero.get_output_path()
-      variables['hero-caption'] = self.hero_caption
+      variables['hero-caption'] = self.hero_caption or ''
+      if self.hero_caption:
+        variables['header-classes'] += ' has-caption'
       variables['header'] = template_list.get_raw('post-header-hero', variables)
     else:
       variables['header'] = template_list.get_raw('post-header', variables)
@@ -233,8 +250,6 @@ class Post:
 
   def copy_files(self):
 
-    os.makedirs(self.get_local_output_root(), exist_ok=True)
-    
     if self.hero:
       shutil.copyfile(self.hero.get_local_path(), self.hero.get_local_output_path())
 
@@ -247,19 +262,31 @@ class Post:
       os.makedirs(os.path.split(dest)[0], exist_ok=True)
       shutil.copyfile(src, dest)
     
-  def generate(self, template_list, filenames=None):
+  def generate(self, template_list):
     print('  ' + util.category_dir(self.category) + ' ' + self.shortname + '...', end='')
-
-    self.copy_files()
 
     content = util.minify_html(self.generate_html(template_list))
 
-    if not filenames:
-      filenames = []
-      
-    filenames.append(self.get_local_output_path())
+    filenames = []
+    filenames.append(self.path)
+
+    # for s in self.synonyms:
+    #   p = path.Path()
+    #   p.copy_from(self.path)
+    #   p.set_output_root(os.path.join(util.category_dir(self.category), util.text_to_shortname(s)))
+    #   filenames.append(p)
+
+    for s in self.synonyms:
+      p = path.Path()
+      p.copy_from(self.path)
+      p.set_output_root(os.path.join(util.category_dir(self.category), util.text_to_shortname(s)))
+      os.makedirs(p.get_local_output_root(), exist_ok=True)
+      open(p.get_local_output_path(), 'w').write(util.redirect(self.path.get_output_path()))
 
     for filename in filenames:
-      open(filename, 'w').write(content)
+      os.makedirs(filename.get_local_output_root(), exist_ok=True)
+      open(filename.get_local_output_path(), 'w').write(content)
+
+    self.copy_files()
     
     print('done')

@@ -105,6 +105,29 @@ main.post {
           top: 0;
           right: 0;
         }
+
+      }
+      
+      &.has-caption {
+
+        margin-bottom: $unit * 4;
+
+        .hero.caption {
+          width: 100%;
+          border-bottom: $border-width solid $border-color;
+          font-size: $unit * 1.5;
+          text-transform: uppercase;
+          font-weight: bold;
+          position: absolute;
+          left: 0;
+          bottom: -$unit * 4;
+          padding: $unit $body-horizontal-padding;
+
+          .credit {
+            float: right;
+          }
+          
+        }
         
       }
       

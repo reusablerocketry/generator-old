@@ -5,7 +5,7 @@ import dirs
 
 class Path:
 
-  def __init__(self, local_path, output_path='', local_root='', output_root=''):
+  def __init__(self, local_path='', output_path='', local_root='', output_root=''):
     local_path = local_path.strip()
     output_path = output_path.strip()
 
@@ -13,6 +13,12 @@ class Path:
     self.local_root = local_root
     self.output_path = output_path
     self.output_root = output_root
+
+  def copy_from(self, other):
+    self.local_path = other.local_path
+    self.local_root = other.local_root
+    self.output_path = other.output_path
+    self.output_root = other.output_root
 
   def __repr__(self):
     return 'Path(' + self.get_local_path() + ', ' + self.get_output_path() + ')'
@@ -38,6 +44,9 @@ class Path:
     if with_prefix:
       return os.path.join(dirs.build, path)
     return path
+
+  def get_local_output_root(self, with_prefix=True):
+    return os.path.dirname(self.get_local_output_path(with_prefix))
 
   def get_output_path(self):
     path = os.path.join(self.output_root, self.output_path)

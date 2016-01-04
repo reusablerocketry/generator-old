@@ -2,7 +2,7 @@
 @import 'values';
 
 @mixin link() {
-  margin: 0 3px;
+  margin: 0 1px;
   box-shadow: 0 1px 0 $page-link-color, inset 0 -2px 0 $page-link-color;
 
   transition: box-shadow $anim ease, color $anim ease;

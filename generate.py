@@ -62,7 +62,7 @@ def generate_posts(template_list, posts):
   for p in posts:
     p.generate(template_list)
 
-def generate_post_list(templates, posts, categories=[], title='', excluded=[]):
+def generate_post_list(templates, posts, categories=[], title='', excluded=[], sort='date'):
   post_list = []
   
   for post in posts:
@@ -70,7 +70,10 @@ def generate_post_list(templates, posts, categories=[], title='', excluded=[]):
       continue
     post_list.append(post)
 
-  post_list.sort(key=lambda post: post.publish_date, reverse=True) # sort by newest first
+  if sort == 'date':
+    post_list.sort(key=lambda post: post.publish_date, reverse=True) # sort by newest first
+  elif sort == 'title':
+    post_list.sort(key=lambda post: post.title)
 
   page_variables = {}
   variables = {}
@@ -144,7 +147,7 @@ if __name__ == '__main__':
     
     save_to(['articles/index.html', 'article/index.html'], generate_post_list(templates, posts, ['article'], title='Articles'))
     save_to('news/index.html', generate_post_list(templates, posts, ['news'], title='News'))
-    save_to('terms/index.html', generate_post_list(templates, posts, ['term'], title='Terms'))
+    save_to('terms/index.html', generate_post_list(templates, posts, ['term'], title='Terms', sort='title'))
     
     save_to(['updates/index.html', 'update/index.html'], generate_post_list(templates, posts, ['update'], title='Updates'))
     
@@ -158,9 +161,12 @@ if __name__ == '__main__':
 
     # warn of nonexistent terms
 
-    existing_terms = [x.shortname for x in posts if x.category == 'terms']
+    existing_terms = []
+    for x in posts:
+      if x.category == 'term':
+        existing_terms.extend([util.text_to_shortname(z) for z in x.get_synonyms()])
     used_terms = []
-    
+
     for post in posts:
       used_terms.extend(post.get_terms())
 

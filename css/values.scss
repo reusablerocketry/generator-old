@@ -116,5 +116,5 @@ $text-h1-foreground-color: mix($page-foreground-color, $background-color, 70%);
 $page-max-width: $page-image-width;
 
 @mixin header() {
-  font-family: Montserrat, sans-serif;
+  font-family: Montserrat, Roboto, Arial, Helvetica Neue, Helvetica, sans-serif;
 }

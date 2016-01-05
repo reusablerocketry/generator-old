@@ -22,7 +22,7 @@ html, body {
 html {
   background: $background-color url('/media/background.png') repeat;
   color: $page-foreground-color;
-  font: Roboto, sans-serif;
+  font-family: Roboto, Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: $unit * 2;
 }
 

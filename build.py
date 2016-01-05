@@ -11,6 +11,7 @@ import util
 import template
 import author
 import post
+import term
 
 ################################################################
 # GENERATION
@@ -24,8 +25,18 @@ class Build:
     self.template_list = template.TemplateList()
 
     self.collect_authors()
-    self.posts = self.collect_posts(['article', 'news', 'update', 'term'])
+    self.posts = self.collect_posts(['article', 'news', 'update'])
+    
+    self.terms = self.collect_terms('term')
 
+    self.synonyms = {}
+    
+    for term in self.terms:
+      s = [util.text_to_shortname(x) for x in term.synonyms]
+      for x in s:
+        if x == term.shortname: continue
+        self.synonyms[x] = term.shortname
+      
   def get_files(self, path, ext='md'):
     filenames = [os.path.join(path, f) for path, dirs, files in os.walk(path) for f in files]
     filenames = [x for x in filenames if os.path.splitext(x)[1][1:] == ext]
@@ -53,12 +64,30 @@ class Build:
     post_files = self.get_files(os.path.join(dirs.src, category), 'md')
     
     posts = []
-    for p in post_files:
-      p = p.split('/', 1)[1] # remove dirs.src
-      p = post.Post(p, category, self.authors)
+    for f in post_files:
+      f = f.split('/', 1)[1] # remove dirs.src
+      p = post.Post(f, category, self)
       posts.append(p)
 
     return posts
+
+  def collect_terms(self, directory):
+    
+    if type(directory) == type([]):
+      a = []
+      for x in directory:
+        a.extend(self.collect_terms(x))
+      return a
+    
+    term_files = self.get_files(os.path.join(dirs.src, directory), 'md')
+    
+    terms = []
+    for f in term_files:
+      f = f.split('/', 1)[1] # remove dirs.src
+      p = term.Term(f, self)
+      terms.append(p)
+
+    return terms
 
   # misc pages
 
@@ -83,7 +112,7 @@ class Build:
   def generate_post_list(self, categories=[], title='', excluded=[], sort='date'):
     post_list = []
     
-    for post in self.posts:
+    for post in self.posts + self.terms:
       if (categories and post.category not in categories) or post.is_private() or post.category in excluded:
         continue
       post_list.append(post)
@@ -118,6 +147,13 @@ class Build:
     for p in self.posts:
       p.generate(self.template_list)
 
+  def generate_terms(self):
+    print('# terms (' + str(len(self.terms)) + ')')
+    for t in self.terms:
+      t.generate(self.template_list)
+
+  # indexes
+
   def generate_index(self):
     print('  index')
     content = self.generate_post_list(excluded=['update', 'term'], title='Welcoming the future of space launch')
@@ -148,7 +184,8 @@ class Build:
 
     self.generate_authors()
     self.generate_posts()
-
+    self.generate_terms()
+    
     print('# lists')
     self.generate_index()
     self.generate_list_articles()
@@ -157,5 +194,9 @@ class Build:
     self.generate_list_updates()
 
 if __name__ == '__main__':
-  b = Build()
-  b.generate()
+  try:
+    b = Build()
+    b.generate()
+  except util.GenException as e:
+    print('! ' + str(e))
+    

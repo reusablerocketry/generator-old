@@ -128,6 +128,14 @@ class Build:
   
     util.save_to('404.html', self.template_list.get('404', {}, page_variables))
 
+  def generate_about(self):
+    page_variables = {}
+
+    page_variables['title'] = 'About us'
+    page_variables['pagetype'] = 'about'
+  
+    util.save_to('about/index.html', self.template_list.get('about', {}, page_variables))
+
   # generation
   
   def generate_post_list(self, categories=[], title='', excluded=[], sort='date'):
@@ -232,6 +240,7 @@ class Build:
     self.generate_list_updates()
 
     self.generate_tools()
+    self.generate_about()
     
     self.generate_missing_terms()
 

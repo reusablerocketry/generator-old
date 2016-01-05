@@ -5,7 +5,32 @@
 @import 'text';
 
 main.tools {
+
+  font-family: monospace;
+  padding: $body-vertical-padding 0;
+
+  @extend .tools;
+
+  a {
+    @include link();
+  }
+
+  div {
+    padding: 0 $body-horizontal-padding;
+    
+    &.missing-terms {
+      ul {
+        list-style-type: none;
+      }
+    }
   
-  padding: $body-vertical-padding $body-horizontal-padding;
+  }
+
+  div + div {
+    margin-top: $body-vertical-padding;
+    padding-top: $body-vertical-padding;
+
+    border-top: $border-width solid $border-color;
+  }
   
 }

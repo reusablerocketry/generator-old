@@ -123,6 +123,10 @@ main.post {
           bottom: -$unit * 4;
           padding: $unit $body-horizontal-padding;
 
+          a {
+            @include link();
+          }
+
           .credit {
             float: right;
           }

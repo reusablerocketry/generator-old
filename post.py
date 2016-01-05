@@ -40,6 +40,8 @@ class Post:
 
     self.text = ''
 
+    self.md = None
+
     # hero image
     self.hero = None
 
@@ -202,6 +204,7 @@ class Post:
 
   def get_html_text(self):
     md = util.markdown_convert(self.text, self.build.synonyms)
+    self.md = md[1]
     return md[0]
 
   def get_images(self):
@@ -211,7 +214,9 @@ class Post:
     return self.synonyms
 
   def get_terms(self):
-    return util.md_terms(self.text)
+    if not self.md:
+      self.get_html_text()
+    return self.md.treeprocessors['links'].terms
 
   def get_html_authors(self, template_list):
     x = []
@@ -256,7 +261,7 @@ class Post:
     variables['header-classes'] = ''
     if self.hero:
       variables['hero'] = self.hero.get_output_path()
-      variables['hero-caption'] = self.hero_caption or ''
+      variables['hero-caption'] = util.markdown_convert(self.hero_caption or '')[0]
       if self.hero_caption:
         variables['header-classes'] += ' has-caption'
       variables['header'] = template_list.get_raw('post-header-hero', variables)
@@ -269,7 +274,7 @@ class Post:
   
   # GENERATE
 
-  def copy_files(self):
+  def copy_files(self, filename):
 
     if self.hero:
       shutil.copyfile(self.hero.get_local_path(), self.hero.get_local_output_path())
@@ -277,7 +282,7 @@ class Post:
     images = self.get_images()
     
     for i in images:
-      image_path = path.Path(i, i, self.get_local_root(), self.get_local_output_root())
+      image_path = path.Path(i, i, self.get_local_root(), filename.get_local_output_root())
       src = image_path.get_local_path()
       dest = image_path.get_local_output_path()
       os.makedirs(os.path.split(dest)[0], exist_ok=True)
@@ -293,6 +298,7 @@ class Post:
 
     filenames = []
     filenames.append(self.path)
+    filenames.append(path.Path('', self.unique_hash[:8] + '/index.html'))
 
     # for s in self.synonyms:
     #   p = path.Path()
@@ -310,6 +316,7 @@ class Post:
     for filename in filenames:
       os.makedirs(filename.get_local_output_root(), exist_ok=True)
       open(filename.get_local_output_path(), 'w').write(content)
-
-    self.copy_files()
+      
+    self.copy_files(self.path)
+      
     

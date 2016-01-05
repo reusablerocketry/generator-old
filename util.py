@@ -58,15 +58,24 @@ class LinkTreeprocessor(markdown.treeprocessors.Treeprocessor):
     
     if url.startswith('wikipedia:'):
       return 'https://en.wikipedia.org/wiki/' + wikify(url[len('wikipedia:'):])
+    elif url == 'wikipedia':
+      return self.process('wikipedia:' + element.text)
+    
     elif url.startswith('reddit:'):
       return url.replace('reddit:', 'https://redd.it/')
+    
     elif url.startswith('term:'):
       term = text_to_shortname(url[len('term:'):])
       return self.process_term(term)
-    elif url == 'wikipedia':
-      return self.process('wikipedia:' + element.text)
     elif url == 'term':
       return self.process('term:' + element.text)
+    
+    elif url.startswith('author:'):
+      term = text_to_shortname(url[len('author:'):])
+      return '/author/' + term + '/'
+    elif url == 'author':
+      return self.process('author:' + element.text)
+    
     else:
       return url
 
@@ -87,7 +96,7 @@ class LinkTreeprocessor(markdown.treeprocessors.Treeprocessor):
         if 'href' in element.attrib:
           element.attrib['href'] = self.process(element)
 
-def markdown_convert(text, term_synonyms):
+def markdown_convert(text, term_synonyms={}):
   md = markdown.Markdown(extensions=[LinkExtension()], output_format='html5')
   md.treeprocessors['links'].term_synonyms = term_synonyms
   html = md.convert(text)

@@ -89,6 +89,24 @@ class Build:
 
     return terms
 
+  def get_all_terms(self):
+    terms = []
+    for p in self.terms:
+      terms.append(p.shortname)
+    return terms
+
+  def get_missing_terms(self):
+    terms = []
+    for p in self.posts + self.terms:
+      terms.extend(p.get_terms())
+
+    all_terms = self.get_all_terms()
+    missing_terms = []
+    for term in terms:
+      if term not in all_terms:
+        missing_terms.append(term)
+    return missing_terms
+
   # misc pages
 
   def generate_tools(self):
@@ -96,8 +114,11 @@ class Build:
 
     page_variables['title'] = 'Tools'
     page_variables['pagetype'] = 'tools'
+
+    variables = {}
+    variables['missing-terms'] = ''.join(['<li><a href="/term/' + x + '/">' + x + '</a></li>' for x in self.get_missing_terms()])
   
-    return self.template_list.get('tools', {}, page_variables)
+    util.save_to('tools/index.html', self.template_list.get('tools', variables, page_variables))
 
   def generate_404(self):
     page_variables = {}
@@ -179,6 +200,23 @@ class Build:
     content = self.generate_post_list(categories=['update'], title='Updates', sort='title')
     util.save_to(['update/index.html', 'updates/index.html'], content)
 
+  def generate_missing_terms(self):
+    text = open(os.path.join(dirs.src, 'missing-term.md')).read()
+    for term in self.get_missing_terms():
+      title = 'The entry for "' + term + '" does not exist.'
+      
+      page_variables = {}
+      variables = {}
+      
+      page_variables['title'] = title
+      page_variables['pagetype'] = 'missing-term'
+
+      variables['title'] = title
+      variables['text'] = util.markdown_convert(text.format(term=term))[0]
+
+      filename = os.path.join(util.category_dir('term'), term, 'index.html')
+      util.save_to(filename, self.template_list.get('missing-term', variables, page_variables))
+
   def generate(self):
     self.generate_404()
 
@@ -192,6 +230,10 @@ class Build:
     self.generate_list_news()
     self.generate_list_terms()
     self.generate_list_updates()
+
+    self.generate_tools()
+    
+    self.generate_missing_terms()
 
 if __name__ == '__main__':
   try:

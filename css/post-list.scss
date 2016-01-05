@@ -18,6 +18,10 @@ main.post-list {
       border-top: $border-width solid $border-color;
     }
     
+    @media #{$tiny} {
+      border-top: none;
+    }
+    
     header {
 
       position: relative;
@@ -64,9 +68,7 @@ main.post-list {
         font-weight: bold;
 
         @media #{$medium} {
-          position: static;
-          width: auto;
-          left: 0;
+          display: none;
         }
         
       }

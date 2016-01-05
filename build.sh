@@ -13,4 +13,4 @@ cp media/logo/*.png output/media/logo/ -r
 cp media/background/background.png output/media/background.png
 cp media/logo/favicon.ico output/
 
-./generate.py
+./build.py

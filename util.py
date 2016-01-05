@@ -1,4 +1,5 @@
 
+import os
 import re
 
 import markdown
@@ -7,6 +8,8 @@ import htmlmin
 from markdown.treeprocessors import Treeprocessor
 from markdown.extensions import Extension
 from markdown.util import etree
+
+import dirs
 
 import hashlib
 
@@ -127,3 +130,13 @@ def unique_hash(t):
 def redirect(url):
   return """<!doctype html><html><head><title>Redirecting</title><meta http-equiv="refresh" content="0; url={url}"></head><body class="redirect">Redirecting...</body></html>""".format(url=url)
   
+
+def save_to(filename, text):
+  if type(filename) == type([]):
+    for x in filename:
+      save_to(x, text)
+    return
+  
+  os.makedirs(os.path.split(os.path.join(dirs.build, filename))[0], exist_ok=True)
+  open(os.path.join(dirs.build, filename), 'w').write(minify_html(text))
+

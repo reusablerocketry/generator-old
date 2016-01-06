@@ -45,7 +45,7 @@ class Post:
     self.images = []
 
     # hero image
-    self.hero = image.Image()
+    self.hero = image.Image(self.build)
 
     self.publish_date = 0
     
@@ -212,7 +212,7 @@ class Post:
     md = util.markdown_convert(self.text, self.build.synonyms)
     self.md = md[1]
     try:
-      self.images = [image.Image(i) for i in self.md.images]
+      self.images = [image.Image(self.build, i) for i in self.md.images]
     except util.GenException as e:
       raise util.GenException(str(e) + ' (wanted by "' + self.get_local_path() + '")')
     return md[0]
@@ -226,7 +226,14 @@ class Post:
   def get_terms(self):
     if not self.md:
       self.get_html_text()
-    return self.md.terms
+      
+    terms = self.md.terms + []
+    
+    for i in self.images:
+      terms.extend(i.get_terms())
+    terms.extend(self.hero.get_terms())
+    
+    return terms
 
   def get_html_authors(self, template_list):
     x = []
@@ -272,6 +279,7 @@ class Post:
     if self.hero:
       variables['hero'] = self.hero.get_output_path()
       variables['hero-caption'] = util.markdown_convert(self.hero.image_caption or '')[0]
+      variables['hero-credit'] = util.markdown_convert(self.hero.image_credit or '')[0]
       if self.hero.image_caption:
         variables['header-classes'] += ' has-caption'
       variables['header'] = template_list.get_raw('post-header-hero', variables)

@@ -97,18 +97,18 @@ body.news #header li.news,
 body.about #header .about {
 
   border-bottom: 3px solid $theme-color;
+  
   a {
     color: rgba($header-foreground-color, 0.8);
   }
 
   @media #{$miniscule} {
-    border-bottom: none;
-    background-color: $theme-color;
+    border-bottom: 3px solid $theme-color-foreground;
     a {
-      color: $theme-color-foreground;
+      color: $theme-color-foreground !important;
     }
   }
-  
+
 }
 
 @media #{$tiny} {
@@ -140,51 +140,55 @@ body.about #header .about {
   
 }
 
-@media #{miniscule} {
+@media #{$miniscule} {
   #header {
+
     height: auto;
-    text-align: center;
-    position: static;
-
+    min-height: $header-logo-height;
+    background-color: $theme-color;
+    
     .content {
-
+      
       height: 100%;
 
       > .logo.link {
-        float: none;
-        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: inline-block;
         margin: 0;
         width: $header-logo-height;
+        overflow: hidden;
 
         &:after {
-          width: 100%;
-        }
-      }
-      
-      > nav {
-        width: 100%;
-        margin: 0;
-        height: auto;
-
-        ul {
-
-          width: 100%;
-          li {
-            margin: 0;
-            padding: 0;
-            display: block;
-          }
-          
+          display: none;
         }
         
       }
-      
-      .about {
-        float: none;
-        width: 100%;
+
+      > nav {
+        position: absolute;
+        top: 0;
+        left: $header-logo-height;
         margin: 0;
-        padding: 0;
+        height: $header-logo-height;
+
+        li {
+          height: $header-logo-height !important;
+        }
       }
+
+      > nav a, .about a {
+        color: rgba($theme-color-foreground, 0.7);
+        line-height: $header-logo-height;
+      }
+
+      .about {
+        float: right;
+        top: 0;
+        right: 0;
+        height: $header-logo-height; 
+     }
       
     }
     

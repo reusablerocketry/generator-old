@@ -23,6 +23,8 @@ main {
     border-radius: 0;
     max-width: none;
     margin-top: $header-height + $unit;
+
+    margin-top: $header-height + $unit * 2;
   }
 }
 

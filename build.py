@@ -25,12 +25,12 @@ class Build:
     self.template_list = template.TemplateList()
 
     self.collect_authors()
-    self.posts = self.collect_posts(['article', 'news', 'update'])
     
-    self.terms = self.collect_terms('term')
-
     self.synonyms = {}
     
+    self.posts = self.collect_posts(['article', 'news', 'update'])
+    self.terms = self.collect_terms('term')
+
     for term in self.terms:
       s = [util.text_to_shortname(x) for x in term.synonyms]
       for x in s:
@@ -97,6 +97,7 @@ class Build:
 
   def get_missing_terms(self):
     terms = []
+    
     for p in self.posts + self.terms:
       terms.extend(p.get_terms())
 
@@ -105,7 +106,9 @@ class Build:
     for term in terms:
       if term not in all_terms:
         missing_terms.append(term)
-    return missing_terms
+
+    missing_terms = list(set(missing_terms))
+    return sorted(missing_terms)
 
   # misc pages
 

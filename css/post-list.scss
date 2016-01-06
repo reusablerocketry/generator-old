@@ -108,6 +108,9 @@ main.post-list {
     font-size: $unit * 3;
     font-style: italic;
     opacity: 0.5;
+    @media #{$tiny} {
+      padding: $body-vertical-padding * 5 0;
+    }
   }
 
 }

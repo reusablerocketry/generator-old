@@ -7,8 +7,10 @@ import path
 
 class Image(path.Path):
 
-  def __init__(self, local_path='', output_path='', local_root='', output_root=''):
+  def __init__(self, build, local_path='', output_path='', local_root='', output_root=''):
     path.Path.__init__(self, local_path, output_path, local_root, output_root)
+
+    self.build = build
     
     self.image_filename = None
     self.image_caption = None
@@ -16,6 +18,8 @@ class Image(path.Path):
     self.image_license = None
     self.image_type = None
     self.image_contains = []
+
+    self.terms = []
 
     self.image_used = False
 
@@ -70,6 +74,15 @@ class Image(path.Path):
     self.set_local_root(os.path.dirname(self.filename).split('/', 1)[1])
     self.local_path = self.image_filename
     self.output_path = self.output_path + os.path.splitext(self.local_path)[1]
+    self.get_terms()
+
+  def get_terms(self):
+    if self.image_caption:
+      md = util.markdown_convert(self.image_caption, self.build.synonyms)[1]
+      terms = md.terms + self.terms
+      return terms
+    else:
+      return self.terms
 
   def parse_key(self, key, value):
     if key == 'file':
@@ -83,7 +96,9 @@ class Image(path.Path):
     elif key == 'type':
       self.image_type = value
     elif key == 'contains':
-      self.image_contains.append(util.text_to_shortname(value))
+      term = util.text_to_shortname(value)
+      self.image_contains.append(term)
+      self.terms.append(term)
     else:
       return False
     return True

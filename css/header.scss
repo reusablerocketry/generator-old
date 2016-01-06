@@ -101,7 +101,7 @@ body.about #header .about {
     color: rgba($header-foreground-color, 0.8);
   }
 
-  @media #{$tiny} {
+  @media #{$miniscule} {
     border-bottom: none;
     background-color: $theme-color;
     a {
@@ -111,13 +111,36 @@ body.about #header .about {
   
 }
 
-@media #{$small} {
+@media #{$tiny} {
   #header {
+    height: auto;
+    text-align: center;
+    position: static;
 
+    box-shadow: 0 1px 10px rgba(black, 0.5);
+
+    .content {
+
+      height: 100%;
+
+      > .logo.link {
+        float: none;
+        display: block;
+        margin: 0;
+        width: 100%;
+
+        &:after {
+          width: 100%;
+        }
+      }
+      
+    }
+    
   }
+  
 }
 
-@media #{$tiny} {
+@media #{miniscule} {
   #header {
     height: auto;
     text-align: center;
@@ -131,8 +154,7 @@ body.about #header .about {
         float: none;
         display: block;
         margin: 0;
-        width: 100%;
-        margin-bottom: $unit;
+        width: $header-logo-height;
 
         &:after {
           width: 100%;
@@ -140,7 +162,6 @@ body.about #header .about {
       }
       
       > nav {
-        display: block;
         width: 100%;
         margin: 0;
         height: auto;

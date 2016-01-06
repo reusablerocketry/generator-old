@@ -21,6 +21,11 @@ html, body {
 
 html {
   background: $background-color url('/media/background.png') repeat;
+
+  @if $dark {
+    background: $page-background-color;
+  }
+  
   color: $page-foreground-color;
   font-family: Roboto, Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: $unit * 2;

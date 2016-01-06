@@ -6,7 +6,7 @@
   background-color: $header-background-color;
   border-top: $border-width solid $border-color;
 
-  padding: $body-vertical-padding $body-horizontal-padding;
+  padding: $body-vertical-padding 0;
 
   text-align: center;
 
@@ -14,8 +14,9 @@
 
   margin-top: 10em;
   
-  > * {
-    margin: 0 $body-horizontal-padding;
+  > span {
+    padding: 0 $body-horizontal-padding;
+    display: inline-block;
   }
 
   .copyright {
@@ -30,5 +31,26 @@
 @media #{$small} {
   #footer {
     margin-top: 0;
+    font-weight: bold;
+  }
+}
+
+@media #{$tiny} {
+  #footer {
+    
+    border-top: none;
+    padding: 0;
+    padding-top: 5em;
+
+    .copyright {
+      margin-top: 0;
+    }
+    
+    > span {
+      border-top: $border-width solid $border-color;
+      display: block;
+      padding: $unit * 2;
+    }
+
   }
 }

@@ -17,16 +17,19 @@ $anim: 0.15s;
 $page-image-width: 1000px;
 $page-background-color: white;
 $page-foreground-color: #444;
+$page-foreground-extreme: black;
 
 $medium: "(max-width: 1400px)";
 $small: "(max-width: 1024px)";
 $tiny: "(max-width: 600px)";
+$miniscule: "(max-width: 480px)";
 
 @if $dark {
   $background-color: #444;
 
   $page-background-color: #555;
-  $page-foreground-color: #ccc;
+  $page-foreground-color: #d8d8d8;
+  $page-foreground-extreme: white;
 }
 
 /* header */
@@ -67,7 +70,12 @@ $body-inline-post-blurb-fade-height: 1.5em;
 
 $page-link-color: rgba(mix($theme-color, $body-background-color, 50%), 0.5);
 $page-link-color-hover: rgba($page-link-color, 1.0);
-$page-link-foreground-color: #222;
+$page-link-foreground-color: $page-foreground-extreme;
+
+@if $dark {
+  $page-link-color: rgba(mix($theme-color, $body-background-color, 100%), 0.5);
+  $page-link-color-hover: rgba($page-link-color, 1.0);
+}
 
 /* border */
 
@@ -104,6 +112,10 @@ $post-blurb-max-height: 4em;
 $post-blurb-fade-height: 1.5em;
 
 $post-text-vertical-padding: $unit * 4;
+
+@if $dark {
+  $post-header-hero-color: $page-foreground-color;
+}
 
 /* text */
 

@@ -108,35 +108,25 @@ main.post {
 
       }
       
-      &.has-caption {
+    }
 
-        margin-bottom: $unit * 4;
+    header + .caption {
+      width: 100%;
+      border-bottom: $border-width solid $border-color;
+      font-size: $unit * 1.5;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: $unit $body-horizontal-padding;
 
-        .hero.caption {
-          width: 100%;
-          border-bottom: $border-width solid $border-color;
-          font-size: $unit * 1.5;
-          text-transform: uppercase;
-          font-weight: bold;
-          position: absolute;
-          left: 0;
-          bottom: -$unit * 4;
-          padding: $unit $body-horizontal-padding;
+      a {
+        @include link();
+      }
 
-          a {
-            @include link();
-          }
-
-          .credit {
-            float: right;
-          }
-          
-        }
-        
+      .credit {
+        float: right;
       }
       
     }
-
     .text {
       padding: $body-vertical-padding $body-horizontal-padding;
     }
@@ -160,4 +150,15 @@ body.term.post {
     display: none !important;
   }
   
+}
+
+@media #{$small} {
+  header {
+    border-bottom: none !important;
+  }
+  header.hero {
+    border-radius: 0 !important;
+    height: 80vw !important;
+  }
+
 }

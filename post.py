@@ -7,6 +7,7 @@ import settings
 import dirs
 import util
 
+import image
 import path
 
 required_keys = ['title', 'author']
@@ -41,12 +42,11 @@ class Post:
     self.text = ''
 
     self.md = None
+    self.images = []
 
     # hero image
-    self.hero = None
+    self.hero = image.Image()
 
-    self.hero_caption = None
-    
     self.publish_date = 0
     
     self.modify_date = os.stat(self.get_local_path()).st_mtime
@@ -123,12 +123,20 @@ class Post:
     
     self.text = f.read()
 
-    if self.hero:
-      ext = os.path.splitext(self.hero)[1]
-      self.hero = path.Path(self.hero, 'hero' + ext, self.get_local_root(False), self.get_local_output_root(False))
-      if not os.path.isfile(self.hero.get_local_path(True)):
-        raise util.GenException('hero image "' + self.hero.get_local_path(True) + '" does not exist ' + \
-                                '(wanted by "' + self.path.get_local_path(True) + '")')
+    for i in self.get_images():
+      i.parse()
+
+  def set_hero(self, filename):
+    ext = os.path.splitext(filename)[1]
+    try:
+      self.hero.image_used = True
+      self.hero.local_path = filename
+      self.hero.set_local_root(self.get_local_root(False))
+      self.hero.output_path = 'hero'
+      
+      self.hero.parse()
+    except util.GenException as e:
+      raise util.GenException(str(e) + ' (wanted by "' + self.get_local_path() + '")')
 
   def key_is_required(self, key):
     if key in required_keys: return True
@@ -153,9 +161,7 @@ class Post:
     # hero: /media/spacex-mars.jpg
     elif key == 'hero':
       value = value.strip()
-      self.hero = value
-    elif key == 'hero-caption':
-      self.hero_caption = value.strip()
+      self.set_hero(value)
 
     # private: true
     elif key == 'private':
@@ -205,10 +211,14 @@ class Post:
   def get_html_text(self):
     md = util.markdown_convert(self.text, self.build.synonyms)
     self.md = md[1]
+    try:
+      self.images = [image.Image(i) for i in self.md.images]
+    except util.GenException as e:
+      raise util.GenException(str(e) + ' (wanted by "' + self.get_local_path() + '")')
     return md[0]
 
   def get_images(self):
-    return util.md_images(self.text)
+    return self.images
 
   def get_synonyms(self):
     return self.synonyms
@@ -216,7 +226,7 @@ class Post:
   def get_terms(self):
     if not self.md:
       self.get_html_text()
-    return self.md.treeprocessors['links'].terms
+    return self.md.terms
 
   def get_html_authors(self, template_list):
     x = []
@@ -261,8 +271,8 @@ class Post:
     variables['header-classes'] = ''
     if self.hero:
       variables['hero'] = self.hero.get_output_path()
-      variables['hero-caption'] = util.markdown_convert(self.hero_caption or '')[0]
-      if self.hero_caption:
+      variables['hero-caption'] = util.markdown_convert(self.hero.image_caption or '')[0]
+      if self.hero.image_caption:
         variables['header-classes'] += ' has-caption'
       variables['header'] = template_list.get_raw('post-header-hero', variables)
     else:
@@ -276,17 +286,15 @@ class Post:
 
   def copy_files(self, filename):
 
-    if self.hero:
-      shutil.copyfile(self.hero.get_local_path(), self.hero.get_local_output_path())
+    if self.hero.image_used:
+      self.hero.copy()
 
-    images = self.get_images()
-    
-    for i in images:
-      image_path = path.Path(i, i, self.get_local_root(), filename.get_local_output_root())
-      src = image_path.get_local_path()
-      dest = image_path.get_local_output_path()
-      os.makedirs(os.path.split(dest)[0], exist_ok=True)
-      shutil.copyfile(src, dest)
+    for i in self.get_images():
+      i.output_path = os.path.abspath(os.path.relpath(i.local_path, self.get_local_root()))
+      try:
+        i.copy()
+      except GenException as e:
+        raise GenException('image "' + i.get_local_path() + '" does not exist (wanted by "' + self.path.get_local_path() + '")')
 
   def print_message(self):
     print('  ' + util.category_dir(self.category) + ' ' + self.shortname)
@@ -294,6 +302,11 @@ class Post:
   def generate(self, template_list):
     self.print_message()
 
+    self.hero.set_output_root(self.get_local_output_root(False))
+    for i in self.get_images():
+      i.set_local_root(self.get_local_root(False))
+      i.set_output_root(self.get_local_output_root(False))
+    
     content = util.minify_html(self.generate_html(template_list))
 
     filenames = []

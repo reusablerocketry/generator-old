@@ -40,7 +40,11 @@ class Path:
     return path
   
   def get_local_output_path(self, with_prefix=True):
-    path = os.path.join(self.output_root, self.output_path)
+    if self.output_path[0] == '/':
+      path = self.output_path[1:]
+    else:
+      path = os.path.join(self.output_root, self.output_path)
+      
     if with_prefix:
       return os.path.join(dirs.build, path)
     return path

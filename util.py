@@ -18,17 +18,27 @@ shortname_maxlength = 100
 class ImageExtension(Extension):
   
   def extendMarkdown(self, md, md_globals):
-    img_ext = ImageTreeprocessor(md)
-    md.treeprocessors.add('imgext', img_ext, '>inline')
+    
+    treeprocessor = ImageTreeprocessor(md)
+    md.treeprocessors['images'] = treeprocessor
 
 class ImageTreeprocessor(Treeprocessor):
   
-  def run(self, doc):
-    
-    "Find all images and append to markdown.images. "
+  def children(self, element):
+    children = []
+
+    for node in element:
+      children.append(node)
+      if len(node):
+        children.extend(self.children(node))
+    return children
+
+  def run(self, root):
     self.markdown.images = []
-    for image in doc.findall('.//img'):
-      self.markdown.images.append(image.get('src'))
+    
+    for element in self.children(root):
+      if element.tag == 'img':
+        self.markdown.images.append(element.attrib['src'])
 
 # LINK CHANGING
 
@@ -95,9 +105,10 @@ class LinkTreeprocessor(markdown.treeprocessors.Treeprocessor):
       if element.tag == 'a':
         if 'href' in element.attrib:
           element.attrib['href'] = self.process(element)
+    self.markdown.terms = self.terms
 
 def markdown_convert(text, term_synonyms={}):
-  md = markdown.Markdown(extensions=[LinkExtension()], output_format='html5')
+  md = markdown.Markdown(extensions=[LinkExtension(), ImageExtension()], output_format='html5')
   md.treeprocessors['links'].term_synonyms = term_synonyms
   html = md.convert(text)
   return (html, md)

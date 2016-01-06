@@ -62,6 +62,9 @@ class Post:
     if self.private: return True
     return False
 
+  def get_shortlink(self):
+    return settings.domain + self.unique_hash + '/'
+
   def get_local_path(self, with_prefix=True):
     # content/post/adsf/adsf.md
     return self.path.get_local_path(with_prefix)
@@ -188,7 +191,7 @@ class Post:
 
   def set_unique(self, unique):
     self.unique = unique
-    self.unique_hash = util.unique_hash(unique.strip())
+    self.unique_hash = util.unique_hash(unique.strip())[:8]
     self.add_synonym(unique)
 
   def add_synonym(self, synonym):
@@ -286,6 +289,8 @@ class Post:
     else:
       variables['header'] = template_list.get_raw('post-header', variables)
 
+    variables['shortlink'] = self.get_shortlink()
+    
     page_variables['title'] = self.title
     page_variables['pagetype'] = self.category + ' post'
     return template_list.get('post', variables, page_variables)
@@ -319,7 +324,7 @@ class Post:
 
     filenames = []
     filenames.append(self.path)
-    filenames.append(path.Path('', self.unique_hash[:8] + '/index.html'))
+    filenames.append(path.Path('', self.unique_hash + '/index.html'))
 
     # for s in self.synonyms:
     #   p = path.Path()

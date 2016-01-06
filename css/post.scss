@@ -154,6 +154,28 @@ main.post {
 
   }
 
+  aside.share {
+    margin-top: $body-vertical-padding;
+    border-top: $border-width solid $border-color;
+
+    padding: $body-vertical-padding $body-horizontal-padding;
+
+    color: rgba($page-foreground-color, 0.6);
+
+    > * {
+      display: inline-block;
+    }
+
+    a {
+      @include link();
+    }
+    
+    .shortlink {
+      font-style: italic;
+    }
+    
+  }
+
 }
 
 body.term.post {

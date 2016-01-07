@@ -32,13 +32,19 @@ class Build:
     self.terms = []
     
     self.collect_posts(['article', 'news', 'update'])
-    self.collect_terms('term')
+    self.collect_terms(['term'])
 
     for term in self.terms:
       s = [util.text_to_shortname(x) for x in term.synonyms]
       for x in s:
         if x == term.shortname: continue
         self.synonyms[x] = term.shortname
+
+    self.term_crossreference()
+
+  def term_crossreference(self):
+    for term in self.terms:
+      term.crossreference()
       
   def get_files(self, path, ext='md'):
     filenames = [os.path.join(path, f) for path, dirs, files in os.walk(path) for f in files]
@@ -57,8 +63,15 @@ class Build:
   # POSTS
 
   def post_shortname_exists(self, shortname):
+    shortname = util.text_to_shortname(shortname)
     for post in self.terms + self.posts:
-      if post.shortname == shortname: return True
+      if post.shortname == shortname: return post
+    return False
+  
+  def post_get_by_reference(self, reference):
+    reference = util.text_to_shortname(reference)
+    for post in self.terms + self.posts:
+      if reference in post.get_synonyms(): return post
     return False
   
   def collect_posts(self, category):

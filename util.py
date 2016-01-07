@@ -174,3 +174,11 @@ def save_to(filename, text):
   os.makedirs(os.path.split(os.path.join(dirs.build, filename))[0], exist_ok=True)
   open(os.path.join(dirs.build, filename), 'w').write(minify_html(text))
 
+def plural(n, singular='', plural='s'):
+  if n == 1: return singular
+  return plural
+
+def plural_list(n, singular='', plural='s'):
+  n = len(n)
+  if n == 1: return singular
+  return plural

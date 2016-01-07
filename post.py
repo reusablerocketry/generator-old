@@ -44,6 +44,8 @@ class Post:
     self.md = None
     self.images = []
 
+    self.terms = []
+
     # hero image
     self.hero = image.Image(self.build)
 
@@ -101,6 +103,9 @@ class Post:
       if not line or line.strip() == '':
         break
 
+      if line.strip().startswith('#') or line.strip().startswith('//'):
+        continue
+      
       try:
         key, value = line.split(':')
       except ValueError:
@@ -109,6 +114,8 @@ class Post:
       key = key.lower()
 
       keys.append(key)
+
+      value = value.strip()
 
       if not self.parse_key(key, value):
         raise util.GenException('could not parse key "' + key + '" in "' + self.filename + '"')
@@ -205,7 +212,9 @@ class Post:
     self.add_synonym(unique)
 
   def add_synonym(self, synonym):
-    self.synonyms.append(synonym)
+    synonym = util.text_to_shortname(synonym.strip())
+    if synonym not in self.synonyms:
+      self.synonyms.append(synonym)
 
   def add_author(self, author):
     author = author.strip()
@@ -233,6 +242,11 @@ class Post:
   def get_images(self):
     return self.images
 
+  def add_term(self, term):
+    term = util.text_to_shortname(term.strip())
+    if term not in self.terms:
+      self.terms.append(term)
+
   def get_synonyms(self):
     synonyms = self.synonyms + []
     synonyms.append(self.shortname)
@@ -244,10 +258,11 @@ class Post:
     if not self.md:
       self.get_html_text()
       
-    terms = self.md.terms + []
+    terms = self.md.terms + self.terms
     
     for i in self.images:
       terms.extend(i.get_terms())
+      
     terms.extend(self.hero.get_terms())
     
     return [util.text_to_shortname(x) for x in terms]
@@ -305,10 +320,15 @@ class Post:
       variables['header'] = template_list.get_raw('post-header', variables)
 
     variables['shortlink'] = self.get_shortlink()
+
+    variables['text'] = self.modify_text(variables['text'])
     
     page_variables['title'] = self.title
     page_variables['pagetype'] = self.category + ' post'
     return template_list.get('post', variables, page_variables)
+
+  def modify_text(self, text):
+    return text
   
   # GENERATE
 

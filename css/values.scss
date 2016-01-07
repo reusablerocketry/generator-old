@@ -122,6 +122,10 @@ $post-text-vertical-padding: $unit * 4;
 $text-h1-font-size: $unit * 3;
 $text-h1-foreground-color: mix($page-foreground-color, $background-color, 70%);
 
+/* sidebar */
+
+$sidebar-vertical-padding: $unit * 1;
+$sidebar-horizontal-padding: $unit * 2;
 
 /* page width */
 
@@ -129,4 +133,13 @@ $page-max-width: $page-image-width;
 
 @mixin header() {
   font-family: Montserrat, Roboto, Arial, Helvetica Neue, Helvetica, sans-serif;
+}
+
+@mixin float-clear() {
+  &:after {
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+  }
 }

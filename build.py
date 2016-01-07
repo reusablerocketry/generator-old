@@ -27,9 +27,12 @@ class Build:
     self.collect_authors()
     
     self.synonyms = {}
+
+    self.posts = []
+    self.terms = []
     
-    self.posts = self.collect_posts(['article', 'news', 'update'])
-    self.terms = self.collect_terms('term')
+    self.collect_posts(['article', 'news', 'update'])
+    self.collect_terms('term')
 
     for term in self.terms:
       s = [util.text_to_shortname(x) for x in term.synonyms]
@@ -52,58 +55,57 @@ class Build:
       self.authors[a.shortname] = a
       
   # POSTS
+
+  def post_shortname_exists(self, shortname):
+    for post in self.terms + self.posts:
+      if post.shortname == shortname: return True
+    return False
   
   def collect_posts(self, category):
     
     if type(category) == type([]):
-      a = []
       for x in category:
-        a.extend(self.collect_posts(x))
-      return a
+        self.collect_posts(x)
+      return
     
     post_files = self.get_files(os.path.join(dirs.src, category), 'md')
     
-    posts = []
     for f in post_files:
       f = f.split('/', 1)[1] # remove dirs.src
       p = post.Post(f, category, self)
-      posts.append(p)
-
-    return posts
+      self.posts.append(p)
 
   def collect_terms(self, directory):
     
     if type(directory) == type([]):
-      a = []
       for x in directory:
-        a.extend(self.collect_terms(x))
-      return a
+        self.collect_terms(x)
+      return
     
     term_files = self.get_files(os.path.join(dirs.src, directory), 'md')
     
-    terms = []
     for f in term_files:
       f = f.split('/', 1)[1] # remove dirs.src
       p = term.Term(f, self)
-      terms.append(p)
-
-    return terms
+      self.terms.append(p)
 
   def get_all_terms(self):
     terms = []
     for p in self.terms:
-      terms.append(p.shortname)
+      terms.extend(p.get_synonyms())
     return terms
 
   def get_missing_terms(self):
-    terms = []
+    used_terms = []
     
     for p in self.posts + self.terms:
-      terms.extend(p.get_terms())
+      used_terms.extend(p.get_terms())
 
     all_terms = self.get_all_terms()
+
     missing_terms = []
-    for term in terms:
+    
+    for term in used_terms:
       if term not in all_terms:
         missing_terms.append(term)
 

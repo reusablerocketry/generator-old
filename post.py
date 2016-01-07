@@ -113,10 +113,6 @@ class Post:
       if not self.parse_key(key, value):
         raise util.GenException('could not parse key "' + key + '" in "' + self.filename + '"')
 
-    for k in required_keys:
-      if k not in keys and self.key_is_required(k):
-        raise util.GenException('required key "' + k + '" not present in "' + self.filename + '"')
-
     if not self.unique:
       self.set_unique(self.title)
     else:
@@ -182,8 +178,22 @@ class Post:
     return True
 
   def set_shortname(self, shortname):
-    self.shortname = util.text_to_shortname(self.unique)
-    self.term = util.text_to_shortname(self.unique)
+    shortname = util.text_to_shortname(self.unique)
+    s = shortname[:]
+
+    i = 0
+    while True:
+      if self.build.post_shortname_exists(s):
+        s = shortname + str(i+1)
+        i += 1
+        continue
+      break
+    
+    self.shortname = s
+    
+    if i: print('warning: name ' + shortname + ' already exists, using ' + self.shortname + ' instead.')
+    
+    self.term = util.text_to_shortname(self.shortname)
     self.path.set_output_root(os.path.join(util.category_dir(self.category), self.shortname))
 
   def set_title(self, title):
@@ -224,7 +234,11 @@ class Post:
     return self.images
 
   def get_synonyms(self):
-    return self.synonyms
+    synonyms = self.synonyms + []
+    synonyms.append(self.shortname)
+    synonyms.append(self.title)
+    synonyms = list(set([util.text_to_shortname(x) for x in synonyms]))
+    return synonyms
 
   def get_terms(self):
     if not self.md:
@@ -236,7 +250,7 @@ class Post:
       terms.extend(i.get_terms())
     terms.extend(self.hero.get_terms())
     
-    return terms
+    return [util.text_to_shortname(x) for x in terms]
 
   def get_html_authors(self, template_list):
     x = []
@@ -279,7 +293,8 @@ class Post:
     variables['publish-date-epoch'] = self.publish_date
     
     variables['header-classes'] = ''
-    if self.hero:
+    
+    if self.hero.image_used:
       variables['hero'] = self.hero.get_output_path()
       variables['hero-caption'] = util.markdown_convert(self.hero.image_caption or '')[0]
       variables['hero-credit'] = util.markdown_convert(self.hero.image_credit or '')[0]
@@ -300,6 +315,8 @@ class Post:
   def copy_files(self, filename):
 
     if self.hero.image_used:
+      if self.shortname == 'spacex1':
+        print(self.hero.get_local_output_root())
       self.hero.copy()
 
     for i in self.get_images():
@@ -337,7 +354,6 @@ class Post:
       p.copy_from(self.path)
       p.set_output_root(os.path.join(util.category_dir(self.category), util.text_to_shortname(s)))
       os.makedirs(p.get_local_output_root(), exist_ok=True)
-      open(p.get_local_output_path(), 'w').write(util.redirect(self.path.get_output_path()))
 
     for filename in filenames:
       os.makedirs(filename.get_local_output_root(), exist_ok=True)

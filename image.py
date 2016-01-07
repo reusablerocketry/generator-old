@@ -56,10 +56,11 @@ class Image(path.Path):
 
       value = value.strip()
       if value[-1] == '\\':
+        value = value[:-1]
         while True:
           line = f.readline()
           if not line: break
-          value += ' ' + line.strip()
+          value += ' ' + line.strip()[:-1]
           if line.endswith('\\'):
             continue
           break

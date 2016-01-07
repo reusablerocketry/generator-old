@@ -161,6 +161,7 @@ def unique_hash(t):
 
 
 def redirect(url):
+  print('foobar')
   return """<!doctype html><html><head><title>Redirecting</title><meta http-equiv="refresh" content="0; url={url}"></head><body class="redirect">Redirecting...</body></html>""".format(url=url)
   
 

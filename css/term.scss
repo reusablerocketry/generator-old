@@ -1,0 +1,85 @@
+
+@import 'outline';
+@import 'values';
+
+body.term.post {
+
+  .text {
+    @include float-clear();
+
+    .term-sidebar {
+      @include outline();
+      max-width: 320px;
+      width: 100%;
+      float: right;
+      border-top: 0;
+      border-right: 0;
+      border-radius: 0 0 0 $border-radius;
+
+      margin-top: -$post-header-vertical-padding;
+      margin-left: $unit * 3;
+      margin-right: -$body-horizontal-padding;
+      margin-bottom: $body-vertical-padding;
+
+      div {
+
+        width: 100%;
+
+        padding: $unit 0;
+        
+        ul {
+          margin: 0;
+          padding: $sidebar-vertical-padding $sidebar-horizontal-padding;
+          list-style-type: none;
+          li {
+            margin: 0;
+          }
+        }
+
+        h1 {
+          font-size: 100%;
+          padding: $sidebar-vertical-padding $sidebar-horizontal-padding;
+          padding-bottom: 0;
+          margin: 0;
+        }
+
+      }
+      
+      @media #{$small} {
+        
+        float: none;
+        width: 100vh;
+        max-width: none;
+        margin: 0;
+        margin-top: -$body-vertical-padding;
+        margin-left: -$body-horizontal-padding;
+        border: none;
+
+        border-bottom: $border-width solid $border-color;
+        margin-bottom: $body-vertical-padding * 2;
+        
+        ul, h1 {
+          padding: $sidebar-vertical-padding $sidebar-horizontal-padding * 2 !important;
+        }
+
+      }
+      
+      div + div {
+        border-top: $border-width solid $border-color;
+      }
+        
+    }
+    
+  }
+
+  h1.title {
+    font-size: 200% !important;
+  }
+  
+  h3.date {
+    display: none !important;
+  }
+  
+}
+
+

@@ -20,6 +20,7 @@ class Role:
     self.vehicles = []
     self.locations = []
     self.engines = []
+    self.stages = []
 
   def parse_key(self, key, value):
     if key == 'manufacturer':
@@ -30,6 +31,8 @@ class Role:
       self.add_vehicle(value)
     elif key == 'engine':
       self.add_engine(value)
+    elif key == 'stage':
+      self.add_stage(value)
     else:
       return False
     return True
@@ -56,12 +59,12 @@ class Role:
     self.vehicles.append(value)
     self.term.add_term(value)
 
-  def get_name(self):
-    return self.term.title
-    
-  def get_unique(self):
-    return self.term.unique
-    
+  def add_stage(self, value):
+    value = util.text_to_shortname(value)
+    if value in self.stage: return
+    self.stages.append(value)
+    self.term.add_term(value)
+
   def add_engine(self, value):
     m = engine_number_re.match(value)
     if m:
@@ -73,6 +76,16 @@ class Role:
     self.engines.append(name)
     self.term.add_term(name)
 
+  # NAME
+
+  def get_name(self):
+    return self.term.title
+    
+  def get_unique(self):
+    return self.term.unique
+
+  # GENERATION
+    
   def generate_item_html(self):
     t = self.build.template_list
 
@@ -119,6 +132,9 @@ class Role:
     
   def generate_engines(self):
     self.variables['contents'] += self.generate_items_html('engine', self.engines)
+    
+  def generate_stages(self):
+    self.variables['contents'] += self.generate_items_html('stage', self.stages)
     
   def generate_html(self):
     t = self.build.template_list
@@ -175,6 +191,7 @@ class Vehicle(Role):
     self.generate_manufacturers()
     self.generate_locations()
     self.generate_engines()
+    self.generate_stages()
     
 class Engine(Role):
 
@@ -183,7 +200,7 @@ class Engine(Role):
 
   def role_generate_contents(self):
     self.generate_manufacturers()
-    self.generate_vehicles()
+    self.generate_stages()
     self.generate_locations()
     
 class Term(post.Post):

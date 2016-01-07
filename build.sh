@@ -5,7 +5,7 @@ mkdir output -p
 mkdir output/media -p
 mkdir output/media/logo -p
 
-scss --sourcemap=none css/main.scss output/main.css
+sassc css/main.scss output/main.css
 
 cp template/*.js output/
 

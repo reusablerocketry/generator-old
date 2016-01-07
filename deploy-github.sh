@@ -1,5 +1,7 @@
 #!/bin/sh
 
+./build.sh
+
 cd output
 echo "Commit message:" `date`
 git add *

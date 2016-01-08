@@ -129,7 +129,7 @@ class Post:
     
     self.text = f.read()
 
-    for i in self.get_images():
+    for i in self.images:
       i.parse()
 
   def set_hero(self, filename):
@@ -311,6 +311,7 @@ class Post:
     
     if self.hero.image_used:
       variables['hero'] = self.hero.get_output_path()
+      variables['hero-thumb'] = self.hero.get_output_path_thumb()
       variables['hero-caption'] = util.markdown_convert(self.hero.image_caption or '')[0]
       variables['hero-credit'] = util.markdown_convert(self.hero.image_credit or '')[0]
       if self.hero.image_caption:
@@ -335,16 +336,14 @@ class Post:
   def copy_files(self, filename):
 
     if self.hero.image_used:
-      if self.shortname == 'spacex1':
-        print(self.hero.get_local_output_root())
       self.hero.copy()
-
+      
     for i in self.get_images():
       i.output_path = os.path.abspath(os.path.relpath(i.local_path, self.get_local_root()))
       try:
         i.copy()
-      except GenException as e:
-        raise GenException('image "' + i.get_local_path() + '" does not exist (wanted by "' + self.path.get_local_path() + '")')
+      except util.GenException as e:
+        raise util.GenException('image "' + i.get_local_path() + '" does not exist (wanted by "' + self.path.get_local_path() + '")')
 
   def print_message(self):
     print('  ' + util.category_dir(self.category) + ' ' + self.shortname)
@@ -352,10 +351,11 @@ class Post:
   def generate(self, template_list):
     self.print_message()
 
-    self.hero.set_output_root(self.get_local_output_root(False))
     for i in self.get_images():
       i.set_local_root(self.get_local_root(False))
       i.set_output_root(self.get_local_output_root(False))
+      
+    self.hero.set_output_root(self.get_local_output_root(False))
     
     content = util.minify_html(self.generate_html(template_list))
 

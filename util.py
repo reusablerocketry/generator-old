@@ -182,3 +182,10 @@ def plural_list(n, singular='', plural='s'):
   n = len(n)
   if n == 1: return singular
   return plural
+
+from PIL import Image
+import os.path
+
+def get_image_size(filename):
+  img = Image.open(filename)
+  return img.size
